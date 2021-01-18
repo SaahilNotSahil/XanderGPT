@@ -9,7 +9,7 @@ client = commands.Bot(command_prefix = "zord ")
 
 rules = ["Rule 0: No one will disrespect Xander. This includes banning/kicking/muting/using him aggressively. "]
 
-zords = ["hello", "dob", "date", "ping", "(k)ick", "(b)an", "unban", "h or zords", "(c)lear", "tweet"]
+zds = ["hello", "dob", "date", "ping", "(k)ick", "(b)an", "unban", "h or zords", "(c)lear", "tweet"]
 
 @client.event
 async def on_ready():
@@ -70,7 +70,7 @@ async def unban(ctx, *, member):
 async def zords(ctx):
     await ctx.send("S.P.D. Emergency!")
     await ctx.send("Call the following zords starting with 'zord ':")
-    await ctx.send(zords)
+    await ctx.send(zds)
 
 @client.command()
 async def ping(ctx):
