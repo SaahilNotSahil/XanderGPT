@@ -1,5 +1,0 @@
-discord.py
-os
-dotenv
-datetime
-tweepy
