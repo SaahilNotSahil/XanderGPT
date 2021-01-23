@@ -11,7 +11,21 @@ client = commands.Bot(command_prefix = prefixSymbol)
 
 rules = ["Rule 0: No one will disrespect Xander. This includes banning/kicking/muting/using him aggressively. "]
 
-zds = ["hello", "dob", "date", "ping", "(k)ick", "(b)an", "unban", "h or zords", "(c)lear", "tweet"]
+zds = [
+    "sym - Displays the command prefix (zord )", 
+    "hello - Says hello and welcomes to the server", 
+    "dob - Displays the date of birth of the bot", 
+    "date - Displays the current date and time", 
+    "ping - Displays the ping time or latency of the bot", 
+    "dp - Displays the Display Picture of the specified member",
+    "rule - Displays the rule at the specified number",
+    "kick or k - Kicks the specified member from the server", 
+    "ban or b - Bans the specified member from the server", 
+    "unban or ub - Unbans the specified member from the server", 
+    "h or zords - Displays this list of zords", 
+    "clear or c - Clears the specified number of messages in the channel, default=2", 
+    "tweet - Tweets the specified number of previous messages to twitter", 
+    "sleep - Put's the bot to sleep (exits), WARNING: Only to be used by someone who is running the bot"]
 
 @client.event
 async def on_ready():
@@ -24,7 +38,9 @@ async def sym(ctx):
 @client.command()
 async def hello(ctx):
     await ctx.send("S.P.D. Emergency!")
-    await ctx.send("Hye, Welcome to Bot Factory! I'm Xander. Pleasure meeting you!")
+    for DGuild in client.guilds:
+        if DGuild == ctx.guild:
+            await ctx.send(f"Hye, Welcome to {DGuild.name}! I'm Xander. Pleasure meeting you!")
 
 @client.command()
 async def date(ctx):
@@ -75,8 +91,11 @@ async def unban(ctx, *, member):
 @client.command(aliases = ['h'])
 async def zords(ctx):
     await ctx.send("S.P.D. Emergency!")
-    await ctx.send("Call the following zords starting with 'zord ':")
-    await ctx.send(zds)
+    zrds = ""
+    for zord in zds:
+        zrds = zrds + zord + '\n'
+    embed = discord.Embed(title = "List of available Zords: ", description = zrds, colour = discord.Colour.magenta())
+    await ctx.send(embed = embed)
 
 @client.command()
 async def ping(ctx):
@@ -87,7 +106,13 @@ async def ping(ctx):
 @commands.has_permissions(manage_messages = True)
 async def clear(ctx, amount = 2):
        await ctx.channel.purge(limit = amount)
-    
+
+@client.command()
+async def dp(ctx, member: discord.Member):
+    if not member:
+        member = ctx.author
+    await ctx.send(member.avatar_url)
+
 # tweet command
 @client.command()
 async def tweet(ctx, amount = 1):
