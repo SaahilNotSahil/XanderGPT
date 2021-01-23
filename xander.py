@@ -4,8 +4,10 @@ from dotenv import load_dotenv
 from discord.ext import commands
 import datetime
 import tweeter
+import sys
 
-client = commands.Bot(command_prefix = "zord ")
+prefixSymbol = "zord "
+client = commands.Bot(command_prefix = prefixSymbol)
 
 rules = ["Rule 0: No one will disrespect Xander. This includes banning/kicking/muting/using him aggressively. "]
 
@@ -14,6 +16,10 @@ zords = ["hello", "dob", "date", "ping", "(k)ick", "(b)an", "unban", "h or zords
 @client.event
 async def on_ready():
     print("Xander's Ready!")
+
+@client.command()
+async def sym(ctx):
+    await ctx.send(f"My symbol is {prefixSymbol}")
 
 @client.command()
 async def hello(ctx):
@@ -113,6 +119,11 @@ async def tweet(ctx, amount = 1):
                 embed.set_footer(icon_url = ctx.author.avatar_url, text = f"Posted by {ctx.author.name}")
                 embed.set_author(name = f'@{twitter_username}', icon_url = client.user.default_avatar_url)
                 await DChannel.send(embed = embed)
+
+@client.command()
+async def sleep(ctx):
+    await ctx.send("Good night! I'm gonna sleep now :yawning_face:")
+    sys.exit()
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
