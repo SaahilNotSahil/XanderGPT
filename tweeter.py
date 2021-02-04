@@ -1,3 +1,4 @@
+# Importing required modules
 import tweepy
 import os
 from dotenv import load_dotenv
@@ -9,21 +10,26 @@ Consumer_secret = os.getenv('CONSUMER_SECRET')
 Access_key = os.getenv('ACCESS_KEY')                              
 Access_secret = os.getenv('ACCESS_SECRET')                        
 
+# Setting up the twitter auth
 auth = tweepy.OAuthHandler(Consumer_key,Consumer_secret)
 auth.set_access_token(Access_key,Access_secret)
 api = tweepy.API(auth)
 twitter_client_id = api.me().id
 twitter_username = os.getenv('TWITTER_USERNAME')
 
+# Try verification of the credentials
 try:
     api.verify_credentials()
     print("Authentication OK")
 except:
     print("Error during authentication")
 
+# Tweets the text
 def status_update(text):
     api.update_status(status = text)
     
+# Just some functions to return the required variables to xander.py
+
 def tweet_s():
     tweets = api.user_timeline(id = twitter_client_id, count = 1)[0]
     return tweets
