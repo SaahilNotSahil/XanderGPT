@@ -24,10 +24,10 @@ zds = [
     "ban or b - Bans the specified member from the server", 
     "unban or ub - Unbans the specified member from the server", 
     "h or zords - Displays this list of zords", 
-    "clear or c - Clears the specified number of messages in the channel, default=2", 
+    "clear or c - Clears the specified number of messages in the channel, default = 2, use 0 to clear all", 
     "tweet_reg or tr - Registers the user's tweeter account using his api keys",
-    "tweet - Tweets the specified number of previous messages to twitter. You need to have a twitter developer account and the same must be registered with the bot using the tweet_reg or tr command.", 
-    "sleep - Put's the bot to sleep (exits), WARNING: Only to be used by someone who is running the bot"]
+    "tweet - Tweets the specified number of previous messages to twitter. You need to have a twitter developer account and the same must be registered with the bot using the tweet_reg or tr command."
+    ]
 
 @client.event
 async def on_ready():
@@ -165,12 +165,6 @@ async def tweet(ctx, amount = 1, channelName = ''):
                 embed.set_footer(icon_url = ctx.author.avatar_url, text = f"Posted by {ctx.author.name}")
                 embed.set_author(name = f'@{twitter_username}', icon_url = client.user.default_avatar_url)
                 await DChannel.send(embed = embed)
-
-# Stops the bot from running. WARNING! Use it only if you are running the bot
-@client.command()
-async def sleep(ctx):
-    await ctx.send("Good night! I'm gonna sleep now :yawning_face:")
-    sys.exit()
 
 # Loads the discord token from enviroment variables
 load_dotenv()
