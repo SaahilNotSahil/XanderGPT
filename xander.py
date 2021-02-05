@@ -113,7 +113,10 @@ async def ping(ctx):
 @client.command(aliases = ['c'])
 @commands.has_permissions(manage_messages = True)
 async def clear(ctx, amount = 2):
-       await ctx.channel.purge(limit = amount)
+    if amount == "all":
+        await ctx.channel.purge(ctx.channel.history)
+    else:
+        await ctx.channel.purge(limit = amount)
 
 # Displays the dp of the mentioned member
 @client.command()
