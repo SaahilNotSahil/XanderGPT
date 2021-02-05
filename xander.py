@@ -114,7 +114,7 @@ async def ping(ctx):
 @commands.has_permissions(manage_messages = True)
 async def clear(ctx, amount = 2):
     if amount == 0:
-        await ctx.channel.purge(limit = len(ctx.channel.history))
+        await ctx.channel.purge()
     else:
         await ctx.channel.purge(limit = amount)
 
