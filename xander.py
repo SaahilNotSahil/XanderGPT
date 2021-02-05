@@ -14,7 +14,6 @@ client = commands.Bot(command_prefix = prefixSymbol)
 rules = ["Rule 0: No one will disrespect Xander. This includes banning/kicking/muting/using him aggressively. "]
 
 zds = [
-    "sym - Displays the command prefix (zord )", 
     "hello - Says hello and welcomes to the server", 
     "dob - Displays the date of birth of the bot", 
     "date - Displays the current date and time", 
