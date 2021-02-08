@@ -132,7 +132,7 @@ async def tweet_reg(ctx):
 
 # Tweets the specified no. of recent messages as a single tweet
 @client.command()
-async def tweet(ctx, amount = 1, channelName = ''):
+async def tweet(ctx, amount = 1, channelName = 'tweet'):
     await ctx.channel.purge(limit = 1)
 
     msgs = []
@@ -149,11 +149,7 @@ async def tweet(ctx, amount = 1, channelName = ''):
     tweet_text = tweeter.tweetText()
     tweet_url = tweeter.tweetURL()
     twitter_username = os.getenv('TWITTER_USERNAME')
-
-    if channelName == '':
-        response_channel = ctx.channel.name
-    else:
-        response_channel = channelName
+    response_channel = channelName
 
     for DGuild in client.guilds:
         for DChannel in DGuild.text_channels:
