@@ -92,8 +92,8 @@ async def hello(ctx):
             await ctx.send(f"Hye, Welcome to {DGuild.name}! I'm Xander. Pleasure meeting you!")
 
 @client.command()
-async def spam(ctx, *, message="This is a spam"):
-    while True:
+async def spam(ctx, amount, *, message="This is a spam"):
+    for i in range(amount):
         await ctx.send(message)
 
 @client.command(aliases = ['meme'])
@@ -367,7 +367,7 @@ async def ide(ctx):
 @client.command(aliases=['term'])
 async def terminal(ctx):
     while True:
-        await ctx.send(f"{ctx.author}@Xander:~$")
+        await ctx.send(f"{ctx.author.split('#')[0]}@Xander:~$")
         comm = await client.wait_for('message', check = lambda message: message.author == ctx.author)
         comm = comm.content
 
