@@ -1,1 +1,1 @@
-worker: python xander.py 
+worker: python bot.py 

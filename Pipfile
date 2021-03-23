@@ -4,11 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-discord = "*"
-tweepy = "*"
-python-dotenv = "*"
 
 [dev-packages]
+discord = "*"
+python-dotenv = "*"
+tweepy = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.7"
