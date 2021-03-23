@@ -24,7 +24,7 @@ rules = ["Rule 0: No one will disrespect Xander. This includes banning/kicking/m
 coms = [
     "setprefix - Allows you to change the bot' prefix",
     "hello - Says hello and welcomes to the server", 
-    "spam - Self explanatory :)",
+    "spam - Spams a message specified number of times",
     "dob - Displays the date of birth of the bot", 
     "date - Displays the current date and time", 
     "ping - Displays the ping time or latency of the bot", 
@@ -33,11 +33,13 @@ coms = [
     "kick or k - Kicks the specified member from the server", 
     "ban or b - Bans the specified member from the server", 
     "unban or ub - Unbans the specified member from the server", 
-    "hlp or h - Displays this list of commands", 
+    "help or h - Displays this list of commands", 
     "clear or c - Clears the specified number of messages in the channel, default = 2, use 0 to clear all", 
+    "rmchannel or rmc - Removes that channel where the command is run",
     "tweet_reg or tr - Registers the user's tweeter account using his api keys",
     "tweet - Tweets the specified number of previous messages to twitter. You need to have a twitter developer account and the same must be registered with the bot using the tweet_reg or tr command.",
-    "ide - Lets you write your code directly on discord and returns the output and errors if any"
+    "ide - Lets you write your code directly on discord and returns the output and errors if any; Has two modes - channel and dm",
+    "terminal - Runs your commands on a ubuntu terminal (experimental)"
     ]
 
 @client.event
@@ -263,11 +265,11 @@ async def ide(ctx):
     ideMode = ideMode.content
 
     if ideMode == "channel":
-        modes[str(ctx.author.id)] = "channel"
+        modes[str(ctx.author.discriminator)] = "channel"
         await ctx.send("Your ide mode is now set to channel.")
 
     if ideMode == "dm":
-        modes[str(ctx.author.id)] = "dm"
+        modes[str(ctx.author.discriminator)] = "dm"
         await ctx.send("Your ide mode is now set to dm.")
 
     with open("ideMode.json", "w") as i:
@@ -277,7 +279,7 @@ async def ide(ctx):
     with open("ideMode.json", "r") as i:
         modes = json.load(i)
 
-    if modes[str(ctx.author.id)] == "channel":
+    if modes[str(ctx.author.discriminator)] == "channel":
         await ctx.send("What should be the name of your code file (without extension)?")
         filename = await client.wait_for('message', check=lambda message: message.author == ctx.author)
         filename = filename.content
@@ -316,7 +318,7 @@ async def ide(ctx):
             await ctx.send(f"Output:\n{outputs[1]}")
             await ctx.send(f"RuntimeError:\n{outputs[2]}")
 
-    if modes[str(ctx.author.id)] == "dm":
+    if modes[str(ctx.author.discriminator)] == "dm":
         await ctx.author.send("What should be the name of your code file (without extension)?")
         filename = await client.wait_for('message', check=lambda message: message.author == ctx.author)
         filename = filename.content
