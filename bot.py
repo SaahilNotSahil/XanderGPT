@@ -25,6 +25,7 @@ coms = [
     "setprefix - Allows you to change the bot' prefix",
     "hello - Says hello and welcomes to the server", 
     "spam - Spams a message specified number of times",
+    "progmeme or meme - Posts a random meme from ProgrammerHumor subreddit",
     "dob - Displays the date of birth of the bot", 
     "date - Displays the current date and time", 
     "ping - Displays the ping time or latency of the bot", 
@@ -94,7 +95,11 @@ async def hello(ctx):
 async def spam(ctx, *, message="This is a spam"):
     while True:
         await ctx.send(message)
-        
+
+@client.command(aliases = ['meme'])
+async def progmeme(ctx):
+    await redditPosts.reddit("ProgrammerHumor", ctx.channel)
+    
 # Tells the current date and time
 @client.command()
 async def date(ctx):
