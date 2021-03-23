@@ -1,8 +1,4 @@
 .env
 .venv
 .vscode
-sexa/
 __pycache__/
-clearID.py
-*.bak
-bak/
