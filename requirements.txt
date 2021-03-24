@@ -1,5 +1,3 @@
-python_version==3.7
-
 discord
 python-dotenv
 redditPosts
