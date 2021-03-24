@@ -1,3 +1,5 @@
+python==3.7
+
 discord
 python-dotenv
-redditPosts==1.0.3
+redditPosts
