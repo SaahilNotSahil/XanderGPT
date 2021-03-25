@@ -32,11 +32,11 @@ class Greetings(commands.Cog):
                 await channel.send(f"My default prefix is {prefixes[str(guild.id)]}.\nUse ```{prefixes[str(guild.id)]}setprefix <prefix>``` to change the prefix.")
 
     @commands.Cog.listener()
-    async def on_member_join(self, member: discord.Member, guild):
-        channel = guild.system_channel
+    async def on_member_join(self, member: discord.Member):
+        channel = member.guild.system_channel
 
         if channel is not None:
-            await channel.send(f"Welcome @{member.split('#')[0]} to {member.guild.name}!")
+            await channel.send(f"Welcome {member} to {member.guild.name}!")
 
     @commands.command()
     async def hello(self, ctx):
