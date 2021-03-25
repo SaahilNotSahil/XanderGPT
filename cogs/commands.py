@@ -38,9 +38,9 @@ class Greetings(commands.Cog):
 
     @bot.event
     async def on_member_join(self, member):
-        channel = member.guild.system_channel
+        channel = bot.guild.system_channel
 
-        await channel.send(f"Welcome {member} to {member.guild.name}!")
+        await channel.send(f"Welcome {member} to {bot.guild.name}!")
 
     @commands.command()
     async def hello(self, ctx):
