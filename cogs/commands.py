@@ -6,6 +6,11 @@ import random
 import time
 import redditPosts
 
+intents = discord.Intents.default()
+intents.members = True
+
+bot = discord.Client(intents=intents)
+
 class Greetings(commands.Cog):
     '''
         Commands to greet you
@@ -31,7 +36,7 @@ class Greetings(commands.Cog):
                 await channel.send(f"Hola! I'm Xander! Thanks for inviting me to {guild.name}.")
                 await channel.send(f"My default prefix is {prefixes[str(guild.id)]}.\nUse ```{prefixes[str(guild.id)]}setprefix <prefix>``` to change the prefix.")
 
-    @commands.Cog.listener()
+    @bot.event
     async def on_member_join(self, member: discord.Member):
         channel = member.guild.system_channel
 
