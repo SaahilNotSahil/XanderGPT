@@ -40,8 +40,7 @@ class Greetings(commands.Cog):
     async def on_member_join(self, member: discord.Member):
         channel = member.guild.system_channel
 
-        if channel is not None:
-            await channel.send(f"Welcome {member} to {member.guild.name}!")
+        await channel.send(f"Welcome {member} to {member.guild.name}!")
 
     @commands.command()
     async def hello(self, ctx):
