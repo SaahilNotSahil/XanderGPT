@@ -3,6 +3,7 @@ from discord.ext import commands
 import json
 import datetime
 import random
+import time
 import redditPosts
 
 class Greetings(commands.Cog):
@@ -249,7 +250,7 @@ class Fun(commands.Cog):
         await redditPosts.reddit(subreddit, ctx.channel)
 
     @commands.command()
-    async def spam(self, ctx, amount = 100, msg = "This is a spam"):
+    async def spam(self, ctx, amount = 100, *, msg = "This is a spam"):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
@@ -257,6 +258,7 @@ class Fun(commands.Cog):
         '''
         for i in range(amount):
             await ctx.send(msg)
+            time.sleep(0.2)
 
     @commands.command(aliases = ['flip', 'coin'])
     async def coinflip(self, ctx):
