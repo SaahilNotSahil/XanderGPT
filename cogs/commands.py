@@ -37,7 +37,7 @@ class Greetings(commands.Cog):
                 await channel.send(f"My default prefix is {prefixes[str(guild.id)]}.\nUse ```{prefixes[str(guild.id)]}setprefix <prefix>``` to change the prefix.")
 
     @bot.event
-    async def on_member_join(self, member: discord.Member):
+    async def on_member_join(self, member):
         channel = member.guild.system_channel
 
         await channel.send(f"Welcome {member} to {member.guild.name}!")
