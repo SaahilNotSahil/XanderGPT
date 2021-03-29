@@ -1,20 +1,23 @@
 # Importing required modules
 import os
 import json
-from discord import message
 from dotenv import load_dotenv
 from discord.ext import commands
 
 # Setting the bot's prefix
+
+
 def get_prefix(client, message):
     with open("prefix.json", "r") as p:
         prefixes = json.load(p)
-    
+
     return prefixes[str(message.guild.id)]
 
+
 prefix = get_prefix
-client = commands.Bot(command_prefix = prefix)
+client = commands.Bot(command_prefix=prefix)
 client.remove_command("help")
+
 
 @client.event
 async def on_ready():
@@ -22,8 +25,9 @@ async def on_ready():
     client.load_extension('cogs.commands')
     client.load_extension('cogs.help')
 
+
 @client.command()
-@commands.has_permissions(administrator = True)
+@commands.has_permissions(administrator=True)
 async def load(ctx, extension):
     '''
         Loads the specified extension or cog
@@ -34,8 +38,9 @@ async def load(ctx, extension):
     '''
     client.load_extension(f'cogs.{extension}')
 
+
 @client.command()
-@commands.has_permissions(administrator = True)
+@commands.has_permissions(administrator=True)
 async def unload(ctx, extension):
     '''
         Unloads the specified extension or cog
@@ -46,8 +51,9 @@ async def unload(ctx, extension):
     '''
     client.unload_extension(f'cogs.{extension}')
 
+
 @client.command()
-@commands.has_permissions(administrator = True)
+@commands.has_permissions(administrator=True)
 async def reload(ctx, extension):
     '''
         Reloads the specified extension or cog
