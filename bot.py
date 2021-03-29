@@ -1,7 +1,6 @@
 # Importing required modules
 import os
 import json
-from discord import message
 from dotenv import load_dotenv
 from discord.ext import commands
 
