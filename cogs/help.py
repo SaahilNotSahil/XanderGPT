@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
 from discord.errors import Forbidden
-import json
+import mongo_setup
+from prefixes import Prefix
 
+mongo_setup.global_init()
 
 async def send_embed(ctx, embed):
     try:
@@ -17,14 +19,11 @@ async def send_embed(ctx, embed):
                 embed=embed
             )
 
-
-def get_prefix(ctx):
-    with open("prefix.json", "r") as p:
-        prefixes = json.load(p)
-    p.close()
-
-    return prefixes[str(ctx.guild.id)]
-
+# Getting the bot's prefix
+def get_prefix(ctx) -> Prefix:
+    for pref in Prefix.objects:
+        if pref._guild_id == str(ctx.guild.id):
+            return pref._prefix
 
 class Help(commands.Cog):
     '''

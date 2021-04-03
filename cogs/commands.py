@@ -1,16 +1,12 @@
 import discord
 from discord.ext import commands
-import json
 import datetime
 import random
 import time
-import redditPosts
+import mongo_setup
+from prefixes import Prefix
 
-intents = discord.Intents.default()
-intents.members = True
-
-bot = discord.Client(intents=intents)
-
+mongo_setup.global_init()
 
 class Greetings(commands.Cog):
     '''
@@ -21,28 +17,18 @@ class Greetings(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        with open("prefix.json", "r") as p:
-            prefixes = json.load(p)
-        p.close()
-
-        prefixes[str(guild.id)] = "$"
-
-        with open("prefix.json", "w") as p:
-            json.dump(prefixes, p, indent=4)
-        p.close()
+    async def on_guild_join(self, guild) -> Prefix:
+        pref = Prefix()
+        pref._guild_name = guild.name
+        pref._guild_id = str(guild.id)
+        pref._prefix = "$"
+        pref.save()
 
         channel = guild.system_channel
 
         if channel is not None:
             await channel.send(f"Hola! I'm Xander! Thanks for inviting me to {guild.name}.")
-            await channel.send(f"My default prefix is {prefixes[str(guild.id)]}.\nUse ```{prefixes[str(guild.id)]}setprefix <prefix>``` to change the prefix.")
-
-    @bot.event
-    async def on_member_join(self, member):
-        channel = bot.guild.system_channel
-
-        await channel.send(f"Welcome {member} to {bot.guild.name}!")
+            await channel.send("My default prefix is $.\nUse ```$setprefix <prefix>``` to change the prefix.")
 
     @commands.command()
     async def hello(self, ctx):
@@ -54,15 +40,8 @@ class Greetings(commands.Cog):
         await ctx.send(f"Hello, {ctx.author.mention}! I'm Xander, nice to meet you :smile:")
 
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        with open("prefix.json", "r") as p:
-            prefixes = json.load(p)
-
-        prefixes.pop(str(guild.id))
-
-        with open("prefix.json", "w") as p:
-            json.dump(prefixes, p, indent=4)
-
+    async def on_guild_remove(self, guild) -> Prefix:
+        Prefix.objects(_guild_id = str(guild.id)).delete()
 
 class Moderation(commands.Cog):
     '''
@@ -186,24 +165,19 @@ class Settings(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def setprefix(self, ctx, *, prefix=""):
+    async def setprefix(self, ctx, *, prefix) -> Prefix:
         '''
-            Sets the specified bot prefix for the server. Prints the current prefix if no prefix is specified
+            Sets the specified bot prefix for the server. 
 
             Optional parameters: <new_prefix>
         '''
-        with open("prefix.json", "r") as p:
-            prefixes = json.load(p)
-
-        if prefix == "":
-            await ctx.send(f"The current prefix is set to {prefixes[str(ctx.guild.id)]}\nUse ```{prefixes[str(ctx.guild.id)]}setprefix <prefix>``` to change the prefix.")
-        else:
-            prefixes[str(ctx.guild.id)] = prefix
-            with open("prefix.json", "w") as p:
-                json.dump(prefixes, p, indent=4)
-            await ctx.send(f"Prefix changed successfully to {prefix}")
-
-        p.close()
+        
+        for pref in Prefix.objects:
+            if pref._guild_id == str(ctx.guild.id):
+                pref._prefix = prefix
+                pref.save()
+                
+        await ctx.send("Prefix successfully changed to {}".format(prefix))
 
     @commands.command()
     async def ping(self, ctx):
@@ -232,6 +206,9 @@ class Settings(commands.Cog):
         '''
         await ctx.send(datetime.datetime.now())
 
+    @commands.command(aliases = ['git'])
+    async def github(self, ctx):
+        await ctx.send("https://github.com/XanderWatson/xander-bot")
 
 class Fun(commands.Cog):
     '''
@@ -260,7 +237,7 @@ class Fun(commands.Cog):
 
             Optional parameters: <desired_subreddit>
         '''
-        await redditPosts.reddit(subreddit, ctx.channel)
+        pass
 
     @commands.command()
     async def spam(self, ctx, amount=100, *, msg="This is a spam"):

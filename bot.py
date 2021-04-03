@@ -1,23 +1,20 @@
 # Importing required modules
 import os
-import json
 from dotenv import load_dotenv
 from discord.ext import commands
+import mongo_setup
+from prefixes import Prefix
+
+mongo_setup.global_init()
 
 # Setting the bot's prefix
+def get_prefix(client, message) -> Prefix:
+    for pref in Prefix.objects:
+        if pref._guild_id == str(message.guild.id):
+            return pref._prefix
 
-
-def get_prefix(client, message):
-    with open("prefix.json", "r") as p:
-        prefixes = json.load(p)
-
-    return prefixes[str(message.guild.id)]
-
-
-prefix = get_prefix
-client = commands.Bot(command_prefix=prefix)
+client = commands.Bot(command_prefix = get_prefix)
 client.remove_command("help")
-
 
 @client.event
 async def on_ready():
