@@ -8,6 +8,7 @@ from prefixes import Prefix
 
 mongo_setup.global_init()
 
+
 class Greetings(commands.Cog):
     '''
         Commands to greet you
@@ -41,7 +42,8 @@ class Greetings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild) -> Prefix:
-        Prefix.objects(_guild_id = str(guild.id)).delete()
+        Prefix.objects(_guild_id=str(guild.id)).delete()
+
 
 class Moderation(commands.Cog):
     '''
@@ -171,12 +173,12 @@ class Settings(commands.Cog):
 
             Optional parameters: <new_prefix>
         '''
-        
+
         for pref in Prefix.objects:
             if pref._guild_id == str(ctx.guild.id):
                 pref._prefix = prefix
                 pref.save()
-                
+
         await ctx.send("Prefix successfully changed to {}".format(prefix))
 
     @commands.command()
@@ -206,9 +208,10 @@ class Settings(commands.Cog):
         '''
         await ctx.send(datetime.datetime.now())
 
-    @commands.command(aliases = ['git'])
+    @commands.command(aliases=['git'])
     async def github(self, ctx):
         await ctx.send("https://github.com/XanderWatson/xander-bot")
+
 
 class Fun(commands.Cog):
     '''
