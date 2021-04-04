@@ -3,3 +3,5 @@ python-dotenv
 mongoengine
 pymongo
 dnspython
+beautifulsoup4
+google
