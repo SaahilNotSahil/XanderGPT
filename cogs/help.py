@@ -33,7 +33,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases = ['h'])
     @commands.bot_has_permissions(embed_links=True)
     async def help(self, ctx, *, query=""):
         '''

@@ -3,6 +3,7 @@ from discord.ext import commands
 import datetime
 import random
 import time
+import aiohttp
 import mongo_setup
 from prefixes import Prefix
 
@@ -237,7 +238,15 @@ class Fun(commands.Cog):
 
             Optional parameters: <desired_subreddit>
         '''
-        pass
+        async with aiohttp.ClientSession as cs:
+            async with cs.get(f"https://www.reddit.com/r/{subreddit}.json") as r:
+                memes = await r.json()
+                embed = discord.Embed(
+                    color = discord.Color.blue(),
+                )
+                embed.set_image(url=memes["data"]["children"][random.randint(0, 50)]["data"]["url"])
+                embed.set_footer(text=f"Meme requested by {ctx.author.mention}")
+                await ctx.send(embed=embed)
 
     @commands.command()
     async def spam(self, ctx, amount=100, *, msg="This is a spam"):
