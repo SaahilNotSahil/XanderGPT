@@ -6,6 +6,7 @@ import time
 import aiohttp
 import mongo_setup
 from prefixes import Prefix
+from googlesearch import search
 
 mongo_setup.global_init()
 
@@ -290,6 +291,10 @@ class Fun(commands.Cog):
         '''
         await ctx.send(f'{random.randint(1, 6)}')
 
+    @commands.command(aliases = ['google'])
+    async def search(self, ctx, *, query):
+        for s in search(query, tld='co.in', lang='en', safe='off', num=20, start=0, stop=None, pause=2):
+            await ctx.send(s)
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
