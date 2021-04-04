@@ -176,8 +176,6 @@ class Settings(commands.Cog):
             if msg.mentions[0] == self.bot.user:
                 await msg.channel.send(f"My prefix is {getprefix(msg)}")
 
-        await self.bot.process_commands(msg)
-
     @commands.command()
     async def setprefix(self, ctx, *, prefix) -> Prefix:
         '''
