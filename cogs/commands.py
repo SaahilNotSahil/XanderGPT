@@ -293,6 +293,11 @@ class Fun(commands.Cog):
 
     @commands.command(aliases = ['google'])
     async def search(self, ctx, *, query):
+        '''
+            Makes a google search and returns the top 10 results
+
+            Required arguments: <search_query>
+        '''
         for s in search(query, tld='co.in', lang='en', safe='off', num=20, start=0, stop=10, pause=2):
             await ctx.send(s)
 
