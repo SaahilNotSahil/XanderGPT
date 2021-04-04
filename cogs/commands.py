@@ -238,14 +238,14 @@ class Fun(commands.Cog):
 
             Optional parameters: <desired_subreddit>
         '''
-        async with aiohttp.ClientSession as cs:
+        async with aiohttp.ClientSession() as cs:
             async with cs.get(f"https://www.reddit.com/r/{subreddit}.json") as r:
                 memes = await r.json()
                 embed = discord.Embed(
                     color = discord.Color.blue(),
                 )
-                embed.set_image(url=memes["data"]["children"][random.randint(0, 50)]["data"]["url"])
-                embed.set_footer(text=f"Meme requested by {ctx.author.mention}")
+                embed.set_image(url=memes["data"]["children"][random.randint(1, 25)]["data"]["url"])
+                embed.set_footer(text=f"Meme requested by {ctx.author}")
                 await ctx.send(embed=embed)
 
     @commands.command()
