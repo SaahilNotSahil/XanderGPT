@@ -7,6 +7,7 @@ import aiohttp
 import mongo_setup
 from prefixes import Prefix
 from googlesearch import search
+from googletrans import Translator
 
 mongo_setup.global_init()
 
@@ -300,6 +301,14 @@ class Fun(commands.Cog):
         '''
         for s in search(query, tld='co.in', lang='en', safe='off', num=20, start=0, stop=10, pause=2):
             await ctx.send(s)
+
+    @commands.command(aliases = ['tr', 'trans', 'ts', 't'])
+    async def translate(self, ctx, from, to, *, text):
+        translator = Translator()
+
+        translated = translator.translate(text=text, dest=to, src=from)
+
+        await ctx.send(translated.text)
 
 def setup(bot):
     bot.add_cog(Greetings(bot))

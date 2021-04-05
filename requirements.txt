@@ -5,3 +5,4 @@ pymongo
 dnspython
 beautifulsoup4
 google
+googletrans
