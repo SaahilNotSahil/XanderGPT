@@ -343,10 +343,8 @@ class Fun(commands.Cog):
     
     @commands.command(aliases = ['ll'])
     async def langs(self, ctx):
-        langslist = langlist()
-        for lang in langslist:
-            await ctx.send(f"{lang}: {langslist[lang]}")
-
+        await ctx.send(langlist())
+        
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Moderation(bot))
