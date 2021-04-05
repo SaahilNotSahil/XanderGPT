@@ -70,7 +70,7 @@ class Help(commands.Cog):
             if commands_desc:
                 emb.add_field(
                     name='General\n',
-                    value=f'\n```{commands_desc}```\n',
+                    value=f'\n{commands_desc}\n',
                     inline=False
                 )
 
