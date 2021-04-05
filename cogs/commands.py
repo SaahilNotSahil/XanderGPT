@@ -335,7 +335,7 @@ class Fun(commands.Cog):
             reply2 = reply2.content
             await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2).text)
 
-            if translator.translate(text=reply2, dest='en', src=lang2).text == "STOPPY" or translator.translate(text=reply1, dest='en', src=lang1).text == "STOPPY":
+            if translator.translate(text=reply2, dest='en', src='en').text == "STOPPY" or translator.translate(text=reply1, dest='en', src='en').text == "STOPPY":
                 break
 
 def setup(bot):
