@@ -5,4 +5,4 @@ pymongo
 dnspython
 beautifulsoup4
 google
-googletrans
+googletrans==3.1.0a0
