@@ -304,8 +304,24 @@ class Fun(commands.Cog):
 
             Required arguments: <search_query>
         '''
-        for s in search(query, tld='co.in', lang='en', safe='off', num=20, start=0, stop=10, pause=2):
-            await ctx.send(s)
+        results = []
+        for s in search(query, tld='co.in', lang='en', safe='off', num=10, start=0, stop=10, pause=2):
+            results.append(s)
+
+        i = 0
+
+        msg = await self.bot.send_message(ctx.message.channel, results[i])
+        await self.bot.add_reaction(msg, "⬆️")
+        await self.bot.add_reaction(msg, "⬇️")
+
+        while i >= 0:
+            for r in msg.reactions:
+                if r == "⬇️":
+                    await msg.edit(content=results[i+1])
+                    i += 1
+                elif r == "⬆️":
+                    await msg.edit(content=results[i-1])
+                    i -= 1
 
     @commands.command(aliases = ['tr', 'trans', 'ts', 't'])
     async def translt(self, ctx, src, to, *, text):
