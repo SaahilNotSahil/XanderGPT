@@ -54,7 +54,7 @@ class Greetings(commands.Cog):
         await ctx.send(f"Hello, {ctx.author.mention}! I'm Xander, nice to meet you :smile:")
 
     @commands.Cog.listener()
-    async def on_member_leave(self, member):
+    async def on_member_remove(self, member):
         channel = member.guild.system_channel
 
         await channel.send(f"{member.display_name} has left {member.guild.name}. Hope they'll come back :slight_smile:")
