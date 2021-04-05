@@ -303,10 +303,10 @@ class Fun(commands.Cog):
             await ctx.send(s)
 
     @commands.command(aliases = ['tr', 'trans', 'ts', 't'])
-    async def translt(self, ctx, from, to, *, text):
+    async def translt(self, ctx, src, to, *, text):
         translator = Translator()
 
-        translated = translator.translate(text=text, dest=to, src=from)
+        translated = translator.translate(text=text, dest=to, src=src)
 
         await ctx.send(translated.text)
 
