@@ -16,9 +16,6 @@ def getprefix(msg) -> Prefix:
         if pref._guild_id == str(msg.guild.id):
             return pref._prefix
 
-async def langlist():
-    return googletrans.LANGUAGES
-    
 class Greetings(commands.Cog):
     '''
         Commands to greet you
@@ -343,8 +340,13 @@ class Fun(commands.Cog):
     
     @commands.command(aliases = ['ll'])
     async def langs(self, ctx):
-        await ctx.send(langlist())
-        
+        langlist = []
+        for j in googletrans.LANGUAGES:
+            langlist.append(f"{j}: {googletrans.LANGUAGES[j]}")
+
+        lang = '\n'.join(l for l in langlist)
+        await ctx.send(lang)
+
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Moderation(bot))
