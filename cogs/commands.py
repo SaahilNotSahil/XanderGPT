@@ -222,6 +222,11 @@ class Settings(commands.Cog):
 
     @commands.command(aliases = ['git'])
     async def github(self, ctx):
+        '''
+            Fetches the link to the bot's github repo
+
+            Required arguments: None 
+        '''
         await ctx.send("https://github.com/XanderWatson/xander-bot")
 
 class Fun(commands.Cog):
@@ -304,6 +309,11 @@ class Fun(commands.Cog):
 
     @commands.command(aliases = ['tr', 'trans', 'ts', 't'])
     async def translt(self, ctx, src, to, *, text):
+        '''
+            Translates the given text to the desired language
+
+            Required arguments: <src_lang> <dest_lang> <text_to_translate>
+        '''
         translator = Translator()
 
         translated = translator.translate(text=text, dest=to, src=src)
