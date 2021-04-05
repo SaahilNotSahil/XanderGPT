@@ -345,7 +345,7 @@ class Fun(commands.Cog):
             langlist.append(f"{j}: {googletrans.LANGUAGES[j]}")
 
         lang = '\n'.join(l for l in langlist)
-        await ctx.send(lang)
+        await ctx.send(f"```{lang}```")
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
