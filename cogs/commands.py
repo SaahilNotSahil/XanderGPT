@@ -38,6 +38,12 @@ class Greetings(commands.Cog):
             await channel.send(f"Hola! I'm Xander! Thanks for inviting me to {guild.name}.")
             await channel.send("My default prefix is $.\nUse ```$setprefix <prefix>``` to change the prefix.")
 
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        channel = member.guild.system_channel
+
+        await channel.send(f"Welcome {member.mention} to {member.guild.name}! We hope you enjoy your stay :slight_smile:")
+
     @commands.command()
     async def hello(self, ctx):
         '''
@@ -48,11 +54,11 @@ class Greetings(commands.Cog):
         await ctx.send(f"Hello, {ctx.author.mention}! I'm Xander, nice to meet you :smile:")
 
     @commands.Cog.listener()
-    async def on_member_join(self, member):
+    async def on_member_leave(self, member):
         channel = member.guild.system_channel
 
-        await channel.send(f"Welcome {member.mention} to {member.guild.name}! We hope you enjoy your stay :slight_smile:")
-        
+        await channel.send(f"{member.display_name} has left {member.guild.name}. Hope they'll come back :slight_smile:")
+
     @commands.Cog.listener()
     async def on_guild_remove(self, guild) -> Prefix:
         Prefix.objects(_guild_id = str(guild.id)).delete()
