@@ -6,6 +6,7 @@ from prefixes import Prefix
 
 mongo_setup.global_init()
 
+
 async def send_embed(ctx, embed):
     try:
         await ctx.send(embed=embed)
@@ -20,10 +21,13 @@ async def send_embed(ctx, embed):
             )
 
 # Getting the bot's prefix
+
+
 def get_prefix(ctx) -> Prefix:
     for pref in Prefix.objects:
         if pref._guild_id == str(ctx.guild.id):
             return pref._prefix
+
 
 class Help(commands.Cog):
     '''
@@ -33,7 +37,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases = ['h'])
+    @commands.command(aliases=['h'])
     @commands.bot_has_permissions(embed_links=True)
     async def help(self, ctx, *, query=""):
         '''
