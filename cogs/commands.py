@@ -48,6 +48,12 @@ class Greetings(commands.Cog):
         await ctx.send(f"Hello, {ctx.author.mention}! I'm Xander, nice to meet you :smile:")
 
     @commands.Cog.listener()
+    async def on_member_join(self, member):
+        channel = member.guild.system_channel
+
+        await channel.send(f"Welcome {member.mention} to {member.guild.name}! We hope you enjoy your stay :slight_smile:")
+        
+    @commands.Cog.listener()
     async def on_guild_remove(self, guild) -> Prefix:
         Prefix.objects(_guild_id = str(guild.id)).delete()
 
