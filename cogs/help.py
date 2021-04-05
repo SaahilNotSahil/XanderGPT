@@ -54,7 +54,7 @@ class Help(commands.Cog):
 
             cogs_desc = ""
             for cog in self.bot.cogs:
-                cogs_desc += f'`{cog}` {self.bot.cogs[cog].__doc__}\n'
+                cogs_desc += f'`{cog}` ```{self.bot.cogs[cog].__doc__}```\n'
 
             emb.add_field(
                 name='Modules\n',
@@ -65,12 +65,12 @@ class Help(commands.Cog):
             commands_desc = ''
             for command in self.bot.walk_commands():
                 if not command.cog_name and not command.hidden:
-                    commands_desc += f'\n`{command.name}`\n{command.help}\n'
+                    commands_desc += f'\n`{command.name}`\n```{command.help}```\n'
 
             if commands_desc:
                 emb.add_field(
                     name='General\n',
-                    value=f'\n{commands_desc}\n',
+                    value=f'\n```{commands_desc}```\n',
                     inline=False
                 )
 
@@ -95,7 +95,7 @@ class Help(commands.Cog):
                     for command in self.bot.get_cog(cog).get_commands():
                         if not command.hidden:
                             emb.add_field(
-                                name=f"\n`{prefix}{command.name}`\n", value=f"{command.help}\n\n", inline=False)
+                                name=f"\n`{prefix}{command.name}`\n", value=f"```{command.help}```\n\n", inline=False)
                     break
             else:
                 emb = discord.Embed(
