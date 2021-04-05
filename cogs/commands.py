@@ -320,6 +320,24 @@ class Fun(commands.Cog):
 
         await ctx.send(translated.text)
 
+    @commands.command(aliases = ['tc'])
+    async def lingua(self, ctx, lang1, lang2, member: discord.Member):
+        translator = Translator()
+
+        while True:
+            await ctx.send(f"{translator.translate('It is your turn', dest=lang1, src='en')} {ctx.author.mention}")
+            reply1 = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
+            reply1 = reply1.content
+            await ctx.send(translator.translate(text=reply1, dest=lang2, src=lang1))
+
+            await ctx.send(f"{translator.translate('It is your turn', dest=lang2, src='en')} {member.mention}")
+            reply2 = await self.bot.wait_for('message', check=lambda message: message.author == member)
+            reply2 = reply2.content
+            await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2))
+
+            if reply1 == "STOPPY" or reply2 == "STOPPY":
+                break
+            
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Moderation(bot))
