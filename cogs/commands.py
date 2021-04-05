@@ -310,7 +310,7 @@ class Fun(commands.Cog):
 
         i = 0
 
-        msg = await self.bot.send_message(ctx.message.channel, results[i])
+        msg = await self.bot.send_message(ctx.channel, results[i])
         await self.bot.add_reaction(msg, "⬆️")
         await self.bot.add_reaction(msg, "⬇️")
 
