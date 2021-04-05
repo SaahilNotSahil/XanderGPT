@@ -7,7 +7,7 @@ import aiohttp
 import mongo_setup
 from prefixes import Prefix
 from googlesearch import search
-from googletrans import Translator
+import googletrans
 
 mongo_setup.global_init()
 
@@ -16,6 +16,9 @@ def getprefix(msg) -> Prefix:
         if pref._guild_id == str(msg.guild.id):
             return pref._prefix
 
+async def langlist():
+    return googletrans.LANGUAGES
+    
 class Greetings(commands.Cog):
     '''
         Commands to greet you
@@ -314,7 +317,7 @@ class Fun(commands.Cog):
 
             Required arguments: <src_lang> <dest_lang> <text_to_translate>
         '''
-        translator = Translator()
+        translator = googletrans.Translator()
 
         translated = translator.translate(text=text, dest=to, src=src)
 
@@ -322,7 +325,7 @@ class Fun(commands.Cog):
 
     @commands.command(aliases = ['tc'])
     async def lingua(self, ctx, lang1, lang2, member: discord.Member):
-        translator = Translator()
+        translator = googletrans.Translator()
 
         while True:
             await ctx.send(f"{translator.translate('It is your turn', dest=lang1, src='en').text} {ctx.author.mention}")
@@ -337,6 +340,12 @@ class Fun(commands.Cog):
 
             if translator.translate(text=reply2, dest='en', src='en').text == "STOPPY" or translator.translate(text=reply1, dest='en', src='en').text == "STOPPY":
                 break
+    
+    @commands.command(aliases = ['ll'])
+    async def langs(self, ctx):
+        langslist = langlist()
+        for lang in langslist:
+            await ctx.send(f"{lang}: {langslist[lang]}")
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
