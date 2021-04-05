@@ -325,19 +325,19 @@ class Fun(commands.Cog):
         translator = Translator()
 
         while True:
-            await ctx.send(f"{translator.translate('It is your turn', dest=lang1, src='en')} {ctx.author.mention}")
+            await ctx.send(f"{translator.translate('It is your turn', dest=lang1, src='en').text} {ctx.author.mention}")
             reply1 = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             reply1 = reply1.content
-            await ctx.send(translator.translate(text=reply1, dest=lang2, src=lang1))
+            await ctx.send(translator.translate(text=reply1, dest=lang2, src=lang1).text)
 
-            await ctx.send(f"{translator.translate('It is your turn', dest=lang2, src='en')} {member.mention}")
+            await ctx.send(f"{translator.translate('It is your turn', dest=lang2, src='en').text} {member.mention}")
             reply2 = await self.bot.wait_for('message', check=lambda message: message.author == member)
             reply2 = reply2.content
-            await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2))
+            await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2).text)
 
             if reply1 == "STOPPY" or reply2 == "STOPPY":
                 break
-            
+
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Moderation(bot))
