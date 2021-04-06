@@ -9,15 +9,19 @@ from db.prefixes import Prefix
 mongo_setup.global_init()
 
 # Setting the bot's prefix
+
+
 def get_prefix(client, message) -> Prefix:
     for pref in Prefix.objects:
         if pref._guild_id == str(message.guild.id):
             return pref._prefix
 
+
 intents = discord.Intents.all()
 
-client = commands.Bot(command_prefix = get_prefix, intents=intents)
+client = commands.Bot(command_prefix=get_prefix, intents=intents)
 client.remove_command("help")
+
 
 @client.event
 async def on_ready():
