@@ -13,13 +13,5 @@ class Link(mongoengine.Document):
     icslab3 = mongoengine.StringField()
     _reg_date = mongoengine.DateTimeField(default=datetime.datetime.now())
     
-    links = {
-        "ics": ics,
-        "em": em,
-        "emtut": emtut,
-        "maths": maths,
-        "mathstut": mathstut,
-        "icslab1": icslab1,
-        "icslab2": icslab2,
-        "icslab3": icslab3
-    }
+    courses = [ics, em, emtut, maths, mathstut, icslab1, icslab2, icslab3]
+    

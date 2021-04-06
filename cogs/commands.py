@@ -371,6 +371,8 @@ class College(commands.Cog):
 
     @commands.command(aliases = ['cl'])
     async def link(self, ctx, action, course, link="") -> Link:
+        courses = ["ics", "em", "emtut", "maths", "mathstut", "icslab1", "icslab2", "icslab3"]
+
         await ctx.send("Enter you roll no.:")
         roll = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
         roll = roll.content.upper()
@@ -381,12 +383,8 @@ class College(commands.Cog):
         if action.lower() == 'reg':
             l = Link()
             l._branch = branch
+            l.links[courses.index(course)] = link
             l.save()
-
-            for li in Link.objects:
-                if li._branch == branch:
-                    li.links[course] = link
-                    li.save()
 
         if action.lower() == 'update':
             pass
