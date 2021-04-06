@@ -385,7 +385,7 @@ class College(commands.Cog):
 
             for li in Link.objects:
                 if li._branch == branch:
-                    li.course = link
+                    li.links[course] = link
                     li.save()
 
         if action.lower() == 'update':
