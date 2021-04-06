@@ -3,8 +3,8 @@ import discord
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
-import mongo_setup
-from prefixes import Prefix
+from db import mongo_setup
+from db.prefixes import Prefix
 
 mongo_setup.global_init()
 

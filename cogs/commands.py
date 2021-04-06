@@ -4,8 +4,9 @@ import datetime
 import random
 import time
 import aiohttp
-import mongo_setup
-from prefixes import Prefix
+from db import mongo_setup
+from db.prefixes import Prefix
+from db.links import Link
 from googlesearch import search
 import googletrans
 
@@ -364,8 +365,43 @@ class Fun(commands.Cog):
         lang = '\n'.join(l for l in langlist)
         await ctx.send(f"```{lang}```")
 
+class College(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(aliases = ['cl'])
+    async def link(self, ctx, action, course, link="") -> Link:
+        await ctx.send("Enter you roll no.:")
+        roll = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
+        roll = roll.content.upper()
+
+        branch = roll[3:5]
+        number = roll[5:]
+
+        if action.lower() == 'reg':
+            l = Link()
+            l._branch = branch
+            l.save()
+
+            for li in Link.objects:
+                if li._branch == branch:
+                    li.course = link
+                    li.save()
+
+        if action.lower() == 'update':
+            pass
+
+        if action.lower() == 'get':
+            for l in Link.objects:
+                if l._branch == branch:
+                    await ctx.send(f"{l.course}")
+
+        if action.lower() == 'del':
+            pass
+
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Moderation(bot))
     bot.add_cog(Settings(bot))
     bot.add_cog(Fun(bot))
+    bot.add_cog(College(bot))
