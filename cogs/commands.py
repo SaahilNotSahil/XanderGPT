@@ -4,6 +4,7 @@ import datetime
 import random
 import time
 import aiohttp
+from discord.ext.commands.core import command
 from db import mongo_setup
 from db.prefixes import Prefix
 from db.links import Link
@@ -369,33 +370,37 @@ class College(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def rl(branch):
+        l = Link()
+        l._branch = branch
+        l.save()
+
     @commands.command(aliases = ['cl'])
-    async def link(self, ctx, action, course, link="") -> Link:
+    async def reglink(self, ctx, course, link="") -> Link:
         courses = ["ics", "em", "emtut", "maths", "mathstut", "icslab1", "icslab2", "icslab3"]
 
-        await ctx.send("Enter you roll no.:")
-        roll = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-        roll = roll.content.upper()
+        await ctx.send("Enter you branch code:")
+        branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
+        branch = branch.content.upper()
 
-        branch = roll[3:5]
-        number = roll[5:]
+        self.rl(branch)
 
-        if action.lower() == 'reg':
-            l = Link()
-            l._branch = branch
-            l.links[courses.index(course)] = link
-            l.save()
+        for l in Link.objects:
+            if l._branch == branch:
+                l.courses[courses.index(course)] = link
+                l.save()
 
-        if action.lower() == 'update':
-            pass
+        await ctx.send(f"Link for {course} added/updated successfully")
 
-        if action.lower() == 'get':
-            for l in Link.objects:
+    @commands.command()
+    async def getlink(self, ctx, course):
+        await ctx.send("Enter you branch code:")
+        branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
+        branch = branch.content.upper()
+
+        for l in Link.objects:
                 if l._branch == branch:
                     await ctx.send(f"{l.course}")
-
-        if action.lower() == 'del':
-            pass
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
