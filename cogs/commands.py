@@ -387,7 +387,7 @@ class College(commands.Cog):
 
         for l in Link.objects:
             if l._branch == branch:
-                l.courses[courses.index(course)] = link
+                l.courses[courses.index(course.content)] = link
                 l.save()
 
         await ctx.send(f"Link for {course} added/updated successfully")
@@ -395,14 +395,14 @@ class College(commands.Cog):
     @commands.command()
     async def getlink(self, ctx, course):
         courses = ["ics", "em", "emtut", "maths", "mathstut", "icslab1", "icslab2", "icslab3"]
-        
+
         await ctx.send("Enter you branch code:")
         branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
         branch = branch.content.upper()
 
         for l in Link.objects:
                 if l._branch == branch:
-                    await ctx.send(f"{l.courses[courses.index(course)]}")
+                    await ctx.send(f"{l.courses[courses.index(course.content)]}")
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
