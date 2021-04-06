@@ -1,6 +1,7 @@
 import mongoengine
 import datetime
 
+
 class Link(mongoengine.Document):
     _branch = mongoengine.StringField()
     ics = mongoengine.URLField()
@@ -12,7 +13,7 @@ class Link(mongoengine.Document):
     icslab2 = mongoengine.URLField()
     icslab3 = mongoengine.URLField()
     _reg_date = mongoengine.DateTimeField(default=datetime.datetime.now())
-    
+
     links = {
         "ics": ics,
         "em": em,
@@ -23,4 +24,3 @@ class Link(mongoengine.Document):
         "icslab2": icslab2,
         "icslab3": icslab3
     }
-    
