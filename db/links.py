@@ -3,14 +3,14 @@ import datetime
 
 class Link(mongoengine.Document):
     _branch = mongoengine.StringField()
-    ics = mongoengine.URLField()
-    em = mongoengine.URLField()
-    emtut = mongoengine.URLField()
-    maths = mongoengine.URLField()
-    mathstut = mongoengine.URLField()
-    icslab1 = mongoengine.URLField()
-    icslab2 = mongoengine.URLField()
-    icslab3 = mongoengine.URLField()
+    ics = mongoengine.StringField()
+    em = mongoengine.StringField()
+    emtut = mongoengine.StringField()
+    maths = mongoengine.StringField()
+    mathstut = mongoengine.StringField()
+    icslab1 = mongoengine.StringField()
+    icslab2 = mongoengine.StringField()
+    icslab3 = mongoengine.StringField()
     _reg_date = mongoengine.DateTimeField(default=datetime.datetime.now())
     
     links = {
@@ -23,4 +23,3 @@ class Link(mongoengine.Document):
         "icslab2": icslab2,
         "icslab3": icslab3
     }
-    
