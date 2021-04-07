@@ -13,10 +13,12 @@ import googletrans
 
 mongo_setup.global_init()
 
+
 def getprefix(msg) -> Prefix:
     for pref in Prefix.objects:
         if pref._guild_id == str(msg.guild.id):
             return pref._prefix
+
 
 class Greetings(commands.Cog):
     '''
@@ -63,7 +65,8 @@ class Greetings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild) -> Prefix:
-        Prefix.objects(_guild_id = str(guild.id)).delete()
+        Prefix.objects(_guild_id=str(guild.id)).delete()
+
 
 class Moderation(commands.Cog):
     '''
@@ -199,12 +202,12 @@ class Settings(commands.Cog):
 
             Optional parameters: <new_prefix>
         '''
-        
+
         for pref in Prefix.objects:
             if pref._guild_id == str(ctx.guild.id):
                 pref._prefix = prefix
                 pref.save()
-        
+
         name = ctx.message.guild.get_member(self.bot.user.id).display_name
         p = name.split()[-1]
 
@@ -242,7 +245,7 @@ class Settings(commands.Cog):
         '''
         await ctx.send(datetime.datetime.now())
 
-    @commands.command(aliases = ['git'])
+    @commands.command(aliases=['git'])
     async def github(self, ctx):
         '''
             Fetches the link to the bot's github repo
@@ -250,6 +253,7 @@ class Settings(commands.Cog):
             Required arguments: None 
         '''
         await ctx.send("https://github.com/XanderWatson/xander-bot")
+
 
 class Fun(commands.Cog):
     '''
@@ -282,9 +286,10 @@ class Fun(commands.Cog):
             async with cs.get(f"https://www.reddit.com/r/{subreddit}.json") as r:
                 memes = await r.json()
                 embed = discord.Embed(
-                    color = discord.Color.blue(),
+                    color=discord.Color.blue(),
                 )
-                embed.set_image(url=memes["data"]["children"][random.randint(1, 25)]["data"]["url"])
+                embed.set_image(
+                    url=memes["data"]["children"][random.randint(1, 25)]["data"]["url"])
                 embed.set_footer(text=f"Meme requested by {ctx.author}")
                 await ctx.send(embed=embed)
 
@@ -319,7 +324,7 @@ class Fun(commands.Cog):
         '''
         await ctx.send(f'{random.randint(1, 6)}')
 
-    @commands.command(aliases = ['google'])
+    @commands.command(aliases=['google'])
     async def search(self, ctx, *, query):
         '''
             Makes a google search and returns the top 10 results
@@ -334,7 +339,7 @@ class Fun(commands.Cog):
 
         await ctx.send(f"```{result}```")
 
-    @commands.command(aliases = ['tr', 'trans', 'ts', 't'])
+    @commands.command(aliases=['tr', 'trans', 'ts', 't'])
     async def translt(self, ctx, src, to, *, text):
         '''
             Translates the given text to the desired language
@@ -347,7 +352,7 @@ class Fun(commands.Cog):
 
         await ctx.send(translated.text)
 
-    @commands.command(aliases = ['tc'])
+    @commands.command(aliases=['tc'])
     async def lingua(self, ctx, lang1, lang2, member: discord.Member):
         translator = googletrans.Translator()
 
@@ -364,8 +369,8 @@ class Fun(commands.Cog):
 
             if translator.translate(text=reply2, dest='en', src='en').text == "STOPPY" or translator.translate(text=reply1, dest='en', src='en').text == "STOPPY":
                 break
-    
-    @commands.command(aliases = ['ll'])
+
+    @commands.command(aliases=['ll'])
     async def langs(self, ctx):
         langlist = []
         for j in googletrans.LANGUAGES:
@@ -373,6 +378,7 @@ class Fun(commands.Cog):
 
         lang = '\n'.join(l for l in langlist)
         await ctx.send(f"```{lang}```")
+
 
 class College(commands.Cog):
     def __init__(self, bot):
@@ -413,15 +419,15 @@ class College(commands.Cog):
                     await ctx.send(f"{l.courses[courses.index(course.content)]}") """
 
     @commands.command()
-    async def getlink(self, ctx, course = "", branch = "BB"):
+    async def getlink(self, ctx, course="", branch="BB"):
         courses = {
-            'ics': "https://meet.google.com/xgs-epht-uce", 
-            'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd", 
-            'maths': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=m9e7d74db5eb01695edb8b7753b70640e", 
-            'emtut': "https://meet.google.com/gmv-yfvw-vbc", 
-            'mathstut': "https://meet.google.com/ahf-mvqx-qix", 
-            'icslab1': "https://meet.google.com/svk-fizb-rss", 
-            'icslab2': "https://meet.google.com/gfh-ybbw-czz", 
+            'ics': "https://meet.google.com/xgs-epht-uce",
+            'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd",
+            'maths': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=m9e7d74db5eb01695edb8b7753b70640e",
+            'emtut': "https://meet.google.com/gmv-yfvw-vbc",
+            'mathstut': "https://meet.google.com/ahf-mvqx-qix",
+            'icslab1': "https://meet.google.com/svk-fizb-rss",
+            'icslab2': "https://meet.google.com/gfh-ybbw-czz",
             'icslab3': "https://meet.google.com/nkd-fydo-awv"
         }
 
@@ -429,16 +435,17 @@ class College(commands.Cog):
         if course == "":
             for c in courses:
                 clist.append(c)
-            
+
             Courses = '\n'.join(clist)
             await ctx.send(f"```List of available courses:\n{Courses}```")
-        
+
         else:
             if course in courses:
                 await ctx.send(courses[course])
 
             else:
                 await ctx.send(f"Course {course} not found for branch {branch}")
+
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
