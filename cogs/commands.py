@@ -427,7 +427,7 @@ class College(commands.Cog):
 
         clist = []
         if course == "":
-            for c in course:
+            for c in courses:
                 clist.append(c)
             
             Courses = '\n'.join(clist)
