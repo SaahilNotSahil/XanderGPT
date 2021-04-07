@@ -204,7 +204,15 @@ class Settings(commands.Cog):
             if pref._guild_id == str(ctx.guild.id):
                 pref._prefix = prefix
                 pref.save()
-                
+        
+        name = ctx.message.guild.get_member(self.bot.user.id).display_name
+        p = name.split()[-1]
+
+        if p[0] == '(' and p[-1] == ')':
+            await ctx.message.guild.get_member(self.bot.user.id).edit(nick=f"{' '.join(name.split()[:-1])} ({prefix})")
+        else:
+            await ctx.message.guild.get_member(self.bot.user.id).edit(nick=f"{name} ({prefix})")
+
         await ctx.send("Prefix successfully changed to {}".format(prefix))
 
     @commands.command()
@@ -370,7 +378,7 @@ class College(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def rl(branch):
+    """ def rl(branch) -> Link:
         l = Link()
         l._branch = branch
         l.save()
@@ -393,7 +401,7 @@ class College(commands.Cog):
         await ctx.send(f"Link for {course} added/updated successfully")
 
     @commands.command()
-    async def getlink(self, ctx, course):
+    async def getlink(self, ctx, course) -> Link:
         courses = ["ics", "em", "emtut", "maths", "mathstut", "icslab1", "icslab2", "icslab3"]
 
         await ctx.send("Enter you branch code:")
@@ -402,7 +410,26 @@ class College(commands.Cog):
 
         for l in Link.objects:
                 if l._branch == branch:
-                    await ctx.send(f"{l.courses[courses.index(course.content)]}")
+                    await ctx.send(f"{l.courses[courses.index(course.content)]}") """
+
+    @commands.command()
+    async def getlink(self, ctx, course, branch = "BB"):
+        courses = {
+            'ics': "https://meet.google.com/xgs-epht-uce", 
+            'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd", 
+            'maths': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=m9e7d74db5eb01695edb8b7753b70640e", 
+            'emtut': "https://meet.google.com/gmv-yfvw-vbc", 
+            'mathstut': "https://meet.google.com/ahf-mvqx-qix", 
+            'icslab1': "https://meet.google.com/svk-fizb-rss", 
+            'icslab2': "https://meet.google.com/gfh-ybbw-czz", 
+            'icslab3': "https://meet.google.com/nkd-fydo-awv"
+        }
+
+        if course in courses:
+            await ctx.send(courses[course])
+            
+        else:
+            await ctx.send(f"Course {course} not found for branch {branch}")
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
