@@ -195,7 +195,7 @@ class Settings(commands.Cog):
     @commands.command()
     async def setprefix(self, ctx, *, prefix) -> Prefix:
         '''
-            Sets the specified bot prefix for the server. 
+            Sets the specified bot prefix for the server. Also adds the prefix to the bot's nickname.
 
             Optional parameters: <new_prefix>
         '''
@@ -326,13 +326,8 @@ class Fun(commands.Cog):
 
             Required arguments: <search_query>
         '''
-        results = []
         for s in search(query, tld='co.in', lang='en', safe='off', num=10, start=0, stop=10, pause=2):
-            results.append(s)
-
-        result = '\n'.join(results)
-
-        await ctx.send(f"```{result}```")
+            await ctx.send(f"{s}")
 
     @commands.command(aliases = ['tr', 'trans', 'ts', 't'])
     async def translt(self, ctx, src, to, *, text):
@@ -349,6 +344,11 @@ class Fun(commands.Cog):
 
     @commands.command(aliases = ['tc'])
     async def lingua(self, ctx, lang1, lang2, member: discord.Member):
+        '''
+            Lets you have a real-time translated chat
+
+            Required arguments: <lang_of_the_user> <lang_of_other_user> <mention_of_other_user>
+        '''
         translator = googletrans.Translator()
 
         while True:
@@ -367,6 +367,11 @@ class Fun(commands.Cog):
     
     @commands.command(aliases = ['ll'])
     async def langs(self, ctx):
+        '''
+            Shows a list of languages that can be used in the translator
+
+            Required arguments: None
+        '''
         langlist = []
         for j in googletrans.LANGUAGES:
             langlist.append(f"{j}: {googletrans.LANGUAGES[j]}")
@@ -414,6 +419,11 @@ class College(commands.Cog):
 
     @commands.command()
     async def getlink(self, ctx, course = "", branch = "BB"):
+        '''
+            Sends the class link of the specified course and branch. Sends the list of courses for BB if not specified
+
+            Optional parameters: <course> <branch>
+        '''
         courses = {
             'ics': "https://meet.google.com/xgs-epht-uce", 
             'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd", 
