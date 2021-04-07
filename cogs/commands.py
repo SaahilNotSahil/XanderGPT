@@ -413,7 +413,7 @@ class College(commands.Cog):
                     await ctx.send(f"{l.courses[courses.index(course.content)]}") """
 
     @commands.command()
-    async def getlink(self, ctx, course, branch = "BB"):
+    async def getlink(self, ctx, course = "", branch = "BB"):
         courses = {
             'ics': "https://meet.google.com/xgs-epht-uce", 
             'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd", 
@@ -425,11 +425,20 @@ class College(commands.Cog):
             'icslab3': "https://meet.google.com/nkd-fydo-awv"
         }
 
-        if course in courses:
-            await ctx.send(courses[course])
+        clist = []
+        if course == "":
+            for c in course:
+                clist.append(c)
             
+            Courses = '\n'.join(clist)
+            await ctx.send(f"```List of available courses:\n{Courses}```")
+        
         else:
-            await ctx.send(f"Course {course} not found for branch {branch}")
+            if course in courses:
+                await ctx.send(courses[course])
+
+            else:
+                await ctx.send(f"Course {course} not found for branch {branch}")
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
