@@ -380,6 +380,9 @@ class Fun(commands.Cog):
         await ctx.send(f"```{lang}```")
 
 class College(commands.Cog):
+    '''
+        Commands for college students
+    '''
     def __init__(self, bot):
         self.bot = bot
 
