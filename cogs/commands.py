@@ -385,13 +385,19 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def timer(self, ctx, amount, *, message=""):
+        '''
+            Starts a timer for the specified time. Optionally sends a user-specified message after timer expires.
+
+            Required arguments: <hr>:<min>:<sec>
+            Optional parameters: <message_after_expire>
+        '''
         Time = amount.split(':')
         hr = int(Time[0])
         min = int(Time[1])
         sec = int(Time[2])
 
         msg = await ctx.send(f"Time remaining: {hr}:{min}:{sec}")
-        
+
         while True:
             time.sleep(0.9)
             sec -= 1
@@ -399,7 +405,7 @@ class Fun(commands.Cog):
             if sec < 0:
                 sec = 59
                 min -= 1
-            
+
             if min < 0:
                 min = 59
                 hr -= 1
@@ -408,8 +414,11 @@ class Fun(commands.Cog):
 
             if hr == 0 and min == 0 and sec == 0:
                 time.sleep(0.5)
-                await msg.edit(content=f"{ctx.author.mention} Timer ended.")
-                await ctx.send(message)
+                await msg.edit(content=f"{ctx.author.mention} Timer expired.")
+
+                if message != "":
+                    await ctx.send(message)
+
                 break
 
 
