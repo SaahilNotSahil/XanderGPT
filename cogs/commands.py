@@ -395,7 +395,7 @@ class Fun(commands.Cog):
             if amount == 0:
                 time.sleep(0.5)
                 await msg.edit(content=f"{ctx.author.mention} Timer ended.")
-                await ctx.send(message.content)
+                await ctx.send(message)
                 break
 
 
