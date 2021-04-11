@@ -385,7 +385,7 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def timer(self, ctx, amount):
-        msg = await ctx.send(ctx.channel, f"Time remaining: {amount}")
+        msg = await ctx.send(f"Time remaining: {amount}")
 
         while True:
             amount -= 1
