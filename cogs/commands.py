@@ -414,7 +414,9 @@ class Fun(commands.Cog):
 
             if hr == 0 and min == 0 and sec == 0:
                 time.sleep(0.5)
-                await msg.edit(content=f"{ctx.author.mention} Timer expired.")
+                await msg.delete()
+
+                await ctx.send(f"{ctx.author.mention} Timer expired.")
 
                 if message != "":
                     await ctx.send(message)
