@@ -385,10 +385,10 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def timer(self, ctx, amount, *, message=""):
-        time = amount.split(':')
-        hr = int(time[0])
-        min = int(time[1])
-        sec = int(time[2])
+        Time = amount.split(':')
+        hr = int(Time[0])
+        min = int(Time[1])
+        sec = int(Time[2])
 
         msg = await ctx.send(f"Time remaining: {hr}:{min}:{sec}")
         
