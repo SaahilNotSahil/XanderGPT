@@ -384,15 +384,29 @@ class Fun(commands.Cog):
         await ctx.send(f"```{lang}```")
 
     @commands.command()
-    async def timer(self, ctx, amount: int, *, message=""):
-        msg = await ctx.send(f"Time remaining: {amount}")
+    async def timer(self, ctx, amount, *, message=""):
+        time = amount.split(':')
+        hr = int(time[0])
+        min = int(time[1])
+        sec = int(time[2])
 
+        msg = await ctx.send(f"Time remaining: {hr}:{min}:{sec}")
+        
         while True:
-            amount -= 1
-            time.sleep(1)
-            await msg.edit(content=f"Time remaining: {amount}s")
+            time.sleep(0.9)
+            sec -= 1
 
-            if amount == 0:
+            if sec < 0:
+                sec = 59
+                min -= 1
+            
+            if min < 0:
+                min = 59
+                hr -= 1
+
+            await msg.edit(content=f"Time remaining: {hr}:{min}:{sec}")
+
+            if hr == 0 and min == 0 and sec == 0:
                 time.sleep(0.5)
                 await msg.edit(content=f"{ctx.author.mention} Timer ended.")
                 await ctx.send(message)
