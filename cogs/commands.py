@@ -419,6 +419,7 @@ class Fun(commands.Cog):
                 await ctx.send(f"{ctx.author.mention} Timer expired.")
 
                 if message != "":
+                    time.sleep(1)
                     await ctx.send(message)
 
                 break
