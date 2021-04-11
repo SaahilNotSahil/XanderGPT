@@ -384,7 +384,7 @@ class Fun(commands.Cog):
         await ctx.send(f"```{lang}```")
 
     @commands.command()
-    async def timer(self, ctx, amount):
+    async def timer(self, ctx, amount: int):
         msg = await ctx.send(f"Time remaining: {amount}")
 
         while True:
