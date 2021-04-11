@@ -383,6 +383,19 @@ class Fun(commands.Cog):
         lang = '\n'.join(l for l in langlist)
         await ctx.send(f"```{lang}```")
 
+    @commands.command()
+    async def timer(self, ctx, amount):
+        msg = await self.bot.send_message(f"Time remaining: {amount}")
+
+        while True:
+            amount -= 1
+            time.sleep(1)
+            await msg.edit(content=f"Time remaining: {amount}")
+
+            if amount == 0:
+                await ctx.send("Timer ended.")
+                break
+
 
 class College(commands.Cog):
     '''
