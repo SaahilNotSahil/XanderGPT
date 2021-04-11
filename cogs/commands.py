@@ -393,7 +393,7 @@ class Fun(commands.Cog):
             await msg.edit(content=f"Time remaining: {amount}")
 
             if amount == 0:
-                await msg.edit(f"{ctx.author.mention} Timer ended.")
+                await msg.edit(content=f"{ctx.author.mention} Timer ended.")
                 break
 
 
