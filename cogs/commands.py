@@ -492,7 +492,7 @@ class College(commands.Cog):
                 'BB': "https://meet.google.com/ahf-mvqx-qix",
                 'CH': "",
                 'CI': "",
-                'CS': ["https://meet.google.com/uxx-uxgo-xxt"],
+                'CS': ["http://meet.google.com/aot-jwjt-zxx", "https://meet.google.com/uxx-uxgo-xxt"],
                 'EE': ["http://meet.google.com/uxx-uxgo-xxt"],
                 'ME': "",
                 'MT': "",
