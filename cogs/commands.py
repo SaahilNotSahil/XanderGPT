@@ -477,7 +477,8 @@ class College(commands.Cog):
         courses = {
             'ics': "https://meet.google.com/xgs-epht-uce",
             'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd",
-            'maths': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=m9e7d74db5eb01695edb8b7753b70640e",
+            'maths1': "http://meet.google.com/qct-syro-omd",
+            'maths2': "http://meet.google.com/etn-fxfb-shn",
             'emtut': "https://meet.google.com/gmv-yfvw-vbc",
             'mathstut': "https://meet.google.com/ahf-mvqx-qix",
             'icslab1': "https://meet.google.com/svk-fizb-rss",
@@ -498,7 +499,14 @@ class College(commands.Cog):
                 await ctx.send(courses[course])
 
             else:
-                await ctx.send(f"Course {course} not found for branch {branch}")
+                if course == "maths":
+                    if branch in ["EE", "ME", "MT"]:
+                        await ctx.send(courses["maths2"])
+                    else:
+                        await ctx.send(courses["maths1"])
+                
+                else:
+                    await ctx.send(f"Course {course} not found for branch {branch}")
 
 
 def setup(bot):
