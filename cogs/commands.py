@@ -523,13 +523,13 @@ class College(commands.Cog):
                     else:
                         await ctx.send(courses["maths"][0])
                 
-                if course == "emtut":
+                elif course == "emtut":
                     await ctx.send(courses["emtut"][branch])
                 
-                if course == "mathstut":
+                elif course == "mathstut":
                     await ctx.send(courses["mathstut"][branch])
 
-                if course == "icslab":
+                elif course == "icslab":
                     for l in courses["icslab"][branch]:
                         await ctx.send(l)
                 
