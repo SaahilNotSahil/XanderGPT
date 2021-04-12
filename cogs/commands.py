@@ -476,27 +476,40 @@ class College(commands.Cog):
         '''
         courses = {
             'ics': "https://meet.google.com/xgs-epht-uce",
-            "ee": "",
+            "ee": "https://meet.google.com/ykg-fxzv-vrt",
             'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd",
-            "be": "",
-            'maths1': "http://meet.google.com/qct-syro-omd",
-            'maths2': "http://meet.google.com/etn-fxfb-shn",
-            'emtut': "https://meet.google.com/gmv-yfvw-vbc",
-            'mathstut': "https://meet.google.com/ahf-mvqx-qix",
-            'icslab1': "https://meet.google.com/svk-fizb-rss",
-            'icslab2': "https://meet.google.com/gfh-ybbw-czz",
-            'icslab3': "https://meet.google.com/nkd-fydo-awv"
+            "bio": "https://meet.google.com/xzz-bsqd-wpj",
+            'maths': ["http://meet.google.com/qct-syro-omd", "http://meet.google.com/etn-fxfb-shn"],
+            'emtut': {
+                'AI': "http://meet.google.com/ndk-wkgk-onw",
+                'BB': "https://meet.google.com/gmv-yfvw-vbc",
+                'CH': "http://meet.google.com/uyr-msyy-jts",
+                'CI': "http://meet.google.com/bjj-eazh-pna",
+                "MT": "http://meet.google.com/feb-ixbr-cuj"
+            },
+            'mathstut': {
+                'AI': "",
+                'BB': "https://meet.google.com/ahf-mvqx-qix",
+                'CH': "",
+                'CI': "",
+                'CS': ["https://meet.google.com/uxx-uxgo-xxt"],
+                'EE': ["http://meet.google.com/uxx-uxgo-xxt"],
+                'ME': "",
+                'MT': "",
+            },
+            'icslab': {
+                'AI': [],
+                'BB': ["https://meet.google.com/svk-fizb-rss", "https://meet.google.com/gfh-ybbw-czz", "https://meet.google.com/nkd-fydo-awv"],
+                'CH': ["https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc"],
+                'CI': ["https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc"],
+                'MT': ["https://meet.google.com/lookup/g4sdvkjvbkj", "https://meet.google.com/lookup/g4sdvkjvbkj", "https://meet.google.com/lookup/g4sdvkjvbkj"],
+            },
+            'eelab': {}
         }
-
+        
         clist = []
         if course == "":
             for c in courses:
-                if c == "maths1":
-                    c = "maths"
-
-                if c == "maths2":
-                    continue
-
                 clist.append(c)
 
             Courses = '\n'.join(clist)
@@ -504,17 +517,27 @@ class College(commands.Cog):
 
         else:
             if course in courses:
-                await ctx.send(courses[course])
-
-            else:
                 if course == "maths":
                     if branch in ["EE", "ME", "MT"]:
-                        await ctx.send(courses["maths2"])
+                        await ctx.send(courses["maths"][1])
                     else:
-                        await ctx.send(courses["maths1"])
+                        await ctx.send(courses["maths"][0])
+                
+                if course == "emtut":
+                    await ctx.send(courses["emtut"][branch])
+                
+                if course == "mathstut":
+                    await ctx.send(courses["mathstut"][branch])
+
+                if course == "icslab":
+                    for l in courses["icslab"][branch]:
+                        await ctx.send(l)
                 
                 else:
-                    await ctx.send(f"Course {course} not found for branch {branch}")
+                    await ctx.send(courses[course])
+
+            else:
+                await ctx.send(f"Course {course} not found for branch {branch}")
 
 
 def setup(bot):
