@@ -476,7 +476,9 @@ class College(commands.Cog):
         '''
         courses = {
             'ics': "https://meet.google.com/xgs-epht-uce",
+            "ee": "",
             'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd",
+            "be": "",
             'maths1': "http://meet.google.com/qct-syro-omd",
             'maths2': "http://meet.google.com/etn-fxfb-shn",
             'emtut': "https://meet.google.com/gmv-yfvw-vbc",
@@ -489,6 +491,12 @@ class College(commands.Cog):
         clist = []
         if course == "":
             for c in courses:
+                if c == "maths1":
+                    c = "maths"
+
+                if c == "maths2":
+                    continue
+
                 clist.append(c)
 
             Courses = '\n'.join(clist)
