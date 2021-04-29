@@ -293,13 +293,14 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.has_role('spammer')
     async def spam(self, ctx, amount=100, *, msg="This is a spam"):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
             Optional parameters: <amount> <message>
         '''
-        for i in range(amount):
+        for i in range(int(amount)):
             await ctx.send(msg)
             time.sleep(0.2)
 
