@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands.errors import MissingRole
 import datetime
 import random
 import time
@@ -300,9 +301,13 @@ class Fun(commands.Cog):
 
             Optional parameters: <amount> <message>
         '''
-        for i in range(int(amount)):
-            await ctx.send(msg)
-            time.sleep(0.2)
+        try:
+            for i in range(int(amount)):
+                await ctx.send(msg)
+                time.sleep(0.2)
+        
+        except MissingRole:
+            await ctx.send("You don't have the spammer role.")
 
     @commands.command(aliases=['flip', 'coin'])
     async def coinflip(self, ctx):
