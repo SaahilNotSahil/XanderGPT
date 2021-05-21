@@ -7,7 +7,6 @@ import time
 import aiohttp
 from db import mongo_setup
 from db.prefixes import Prefix
-from db.links import Link
 from googlesearch import search
 import googletrans
 
@@ -306,7 +305,7 @@ class Fun(commands.Cog):
                 await ctx.send(msg)
                 time.sleep(0.2)
         
-        except MissingRole:
+        except MissingRole('spammer'):
             await ctx.send("You don't have the spammer role.")
 
     @commands.command(aliases=['flip', 'coin'])
@@ -353,7 +352,7 @@ class Fun(commands.Cog):
         await ctx.send(translated.text)
 
     @commands.command(aliases=['tc'])
-    async def lingua(self, ctx, lang1, lang2, member: discord.Member):
+    async def transchat(self, ctx, lang1, lang2, member: discord.Member):
         '''
             Lets you have a real-time translated chat
 
@@ -365,15 +364,18 @@ class Fun(commands.Cog):
             await ctx.send(f"{translator.translate('It is your turn', dest=lang1, src='en').text} {ctx.author.mention}")
             reply1 = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             reply1 = reply1.content
+
+            if reply1 == "STOPPY":
+                break
             await ctx.send(translator.translate(text=reply1, dest=lang2, src=lang1).text)
 
             await ctx.send(f"{translator.translate('It is your turn', dest=lang2, src='en').text} {member.mention}")
             reply2 = await self.bot.wait_for('message', check=lambda message: message.author == member)
             reply2 = reply2.content
-            await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2).text)
 
-            if translator.translate(text=reply2, dest='en', src='en').text == "STOPPY" or translator.translate(text=reply1, dest='en', src='en').text == "STOPPY":
+            if reply2 == "STOPPY":
                 break
+            await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2).text)
 
     @commands.command(aliases=['ll'])
     async def langs(self, ctx):
@@ -402,10 +404,10 @@ class Fun(commands.Cog):
         min = int(Time[1])
         sec = int(Time[2])
 
-        msg = await ctx.send(f"Time remaining: {hr}:{min}:{sec}")
+        msg = await ctx.send(f"Time remaining: 0{hr}:0{min}:0{sec}")
 
         while True:
-            time.sleep(0.9)
+            time.sleep(0.7)
             sec -= 1
 
             if sec < 0:
@@ -416,7 +418,7 @@ class Fun(commands.Cog):
                 min = 59
                 hr -= 1
 
-            await msg.edit(content=f"Time remaining: {hr}:{min}:{sec}")
+            await msg.edit(content=f"Time remaining: 0{hr}:0{min}:0{sec}")
 
             if hr == 0 and min == 0 and sec == 0:
                 time.sleep(0.5)
@@ -438,113 +440,6 @@ class College(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    """ def rl(branch) -> Link:
-        l = Link()
-        l._branch = branch
-        l.save()
-
-    @commands.command(aliases = ['cl'])
-    async def reglink(self, ctx, course, link="") -> Link:
-        courses = ["ics", "em", "emtut", "maths", "mathstut", "icslab1", "icslab2", "icslab3"]
-
-        await ctx.send("Enter you branch code:")
-        branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-        branch = branch.content.upper()
-
-        self.rl(branch)
-
-        for l in Link.objects:
-            if l._branch == branch:
-                l.courses[courses.index(course.content)] = link
-                l.save()
-
-        await ctx.send(f"Link for {course} added/updated successfully")
-
-    @commands.command()
-    async def getlink(self, ctx, course) -> Link:
-        courses = ["ics", "em", "emtut", "maths", "mathstut", "icslab1", "icslab2", "icslab3"]
-
-        await ctx.send("Enter you branch code:")
-        branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-        branch = branch.content.upper()
-
-        for l in Link.objects:
-                if l._branch == branch:
-                    await ctx.send(f"{l.courses[courses.index(course.content)]}") """
-
-    @commands.command()
-    async def getlink(self, ctx, course="", branch="BB"):
-        '''
-            Sends the class link of the specified course and branch. Sends the list of courses for BB if not specified
-
-            Optional parameters: <course> <branch>
-        '''
-        courses = {
-            'ics': "https://meet.google.com/xgs-epht-uce",
-            "ee": "https://meet.google.com/ykg-fxzv-vrt",
-            'em': "https://iitjodhpur.webex.com/iitjodhpur/j.php?MTID=mad7d3ba12b47d50233226dff6bddebfd",
-            "bio": "https://meet.google.com/xzz-bsqd-wpj",
-            'maths': ["http://meet.google.com/qct-syro-omd", "http://meet.google.com/etn-fxfb-shn"],
-            'emtut': {
-                'AI': "http://meet.google.com/ndk-wkgk-onw",
-                'BB': "https://meet.google.com/gmv-yfvw-vbc",
-                'CH': "http://meet.google.com/uyr-msyy-jts",
-                'CI': "http://meet.google.com/bjj-eazh-pna",
-                "MT": "http://meet.google.com/feb-ixbr-cuj"
-            },
-            'mathstut': {
-                'AI': "",
-                'BB': "https://meet.google.com/ahf-mvqx-qix",
-                'CH': "",
-                'CI': "",
-                'CS': ["http://meet.google.com/aot-jwjt-zxx", "https://meet.google.com/uxx-uxgo-xxt"],
-                'EE': ["http://meet.google.com/uxx-uxgo-xxt"],
-                'ME': "",
-                'MT': "",
-            },
-            'icslab': {
-                'AI': [],
-                'BB': ["https://meet.google.com/svk-fizb-rss", "https://meet.google.com/gfh-ybbw-czz", "https://meet.google.com/nkd-fydo-awv"],
-                'CH': ["https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc"],
-                'CI': ["https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc", "https://meet.google.com/lookup/g1jkhfjhc"],
-                'MT': ["https://meet.google.com/lookup/g4sdvkjvbkj", "https://meet.google.com/lookup/g4sdvkjvbkj", "https://meet.google.com/lookup/g4sdvkjvbkj"],
-            },
-            'eelab': {}
-        }
-        
-        clist = []
-        if course == "":
-            for c in courses:
-                clist.append(c)
-
-            Courses = '\n'.join(clist)
-            await ctx.send(f"```List of available courses:\n{Courses}```")
-
-        else:
-            if course in courses:
-                if course == "maths":
-                    if branch in ["EE", "ME", "MT"]:
-                        await ctx.send(courses["maths"][1])
-                    else:
-                        await ctx.send(courses["maths"][0])
-                
-                elif course == "emtut":
-                    await ctx.send(courses["emtut"][branch])
-                
-                elif course == "mathstut":
-                    await ctx.send(courses["mathstut"][branch])
-
-                elif course == "icslab":
-                    for l in courses["icslab"][branch]:
-                        await ctx.send(l)
-                
-                else:
-                    await ctx.send(courses[course])
-
-            else:
-                await ctx.send(f"Course {course} not found for branch {branch}")
-
 
 def setup(bot):
     bot.add_cog(Greetings(bot))
