@@ -301,9 +301,9 @@ class Fun(commands.Cog):
                         if everyone.mention in msg:
                             await ctx.send("You cannot spam everyone!")
                 
-                else:
-                    for i in range(int(amount)):
-                        await ctx.send(msg)
+                        else:
+                            for i in range(int(amount)):
+                                await ctx.send(msg)
 
             else:
                 await ctx.send("You cannot spam more than 100 messages at a time.")
