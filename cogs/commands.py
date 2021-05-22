@@ -294,14 +294,12 @@ class Fun(commands.Cog):
 
         if role in ctx.author.roles:
             if amount <= 100:
-                everyone = None
-
                 for r in ctx.guild.roles:
                     if r.name == 'everyone':
                         everyone = r
 
-                if everyone.mention in msg:
-                    await ctx.send("You cannot spam everyone!")
+                        if everyone.mention in msg:
+                            await ctx.send("You cannot spam everyone!")
                 
                 else:
                     for i in range(int(amount)):
