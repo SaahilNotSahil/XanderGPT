@@ -2,4 +2,7 @@ import mongoengine
 
 
 class Link(mongoengine.Document):
-    _courses = mongoengine.DictField()
+    _branch = mongoengine.StringField()
+    _ph = mongoengine.URLField()
+    _cy = mongoengine.URLField()
+    _ss = mongoengine.URLField()
