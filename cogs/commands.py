@@ -284,7 +284,7 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.command()
-    async def spam(self, ctx, amount=100, *, msg="This is a spam"):
+    async def spam(self, ctx, amount: int, *, msg):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
@@ -295,7 +295,7 @@ class Fun(commands.Cog):
         if role in ctx.author.roles:
             if amount <= 100:
                 everyone = discord.utils.find(lambda r: r.name == 'everyone', ctx.guild.roles)
-                if f'@{everyone}' in msg:
+                if everyone in msg.mentions:
                     await ctx.send("You cannot spam eveyone!")
                 
                 else:
