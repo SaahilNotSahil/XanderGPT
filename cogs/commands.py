@@ -492,7 +492,7 @@ class College(commands.Cog):
         l = Link()
 
         try:
-            if branch not in l._courses[course]['branches']:
+            if branch not in self.courses[course]['branches']:
                 self.courses[course]['branches'].append(branch)
                 self.courses[course]['links'].append(link)
                 l._courses = self.courses
