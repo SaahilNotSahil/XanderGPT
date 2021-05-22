@@ -520,9 +520,9 @@ class College(commands.Cog):
         else:
             l = Link()
             if course in self.courses:
-                if branch in l._courses[course]['branches']:
-                    i = l._courses[course]['branches'].index(branch)
-                    await ctx.send(l._courses[course]['links'][i])
+                # if branch in l._courses[course]['branches']:
+                #     i = l._courses[course]['branches'].index(branch)
+                await ctx.send(l._courses)
 
             else:
                 await ctx.send(
