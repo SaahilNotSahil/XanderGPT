@@ -447,31 +447,31 @@ class College(commands.Cog):
     @commands.command()
     async def reglink(self, ctx) -> Link:
         while True:
-            ctx.send(
+            await ctx.send(
                 f"Which course would you like to register for?```{', '.join(self.courses)}```")
             course = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             course = course.content
 
             if course in self.courses:
-                ctx.send(f"Course '{course}' selected successfully!")
+                await ctx.send(f"Course '{course}' selected successfully!")
                 break
 
             else:
-                ctx.send("Course not found. Please select a valid course.")
+                await ctx.send("Course not found. Please select a valid course.")
 
         while True:
-            ctx.send(f"Select your branch:```{', '.join(self.branches)}```")
+            await ctx.send(f"Select your branch:```{', '.join(self.branches)}```")
             branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             branch = branch.content
 
             if branch in self.branches:
-                ctx.send(f"Branch '{branch}' selected successfully!")
+                await ctx.send(f"Branch '{branch}' selected successfully!")
                 break
 
             else:
-                ctx.send("Branch not found. Please select a valid branch.")
+                await ctx.send("Branch not found. Please select a valid branch.")
 
-        ctx.send("Input the class link to complete the registration:")
+        await ctx.send("Input the class link to complete the registration:")
         link = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
         link = link.content
 
@@ -484,11 +484,11 @@ class College(commands.Cog):
                 l.save()
 
             else:
-                ctx.send(
+                await ctx.send(
                     "The class link for this course-branch combination is already registered.")
 
         except Exception as e:
-            ctx.send(
+            await ctx.send(
                 "There was a database error while registering your link. Please try again after some time.")
 
     @commands.command(aliases=['getlink', 'classlink', 'cl', 'gl'])
@@ -497,17 +497,17 @@ class College(commands.Cog):
             msgB = '\n'.join(self.branches)
             msgC = '\n'.join(self.courses)
 
-            ctx.send(f'```List of available branches:\n\n{msgB}```')
-            ctx.send(f'```List of available courses:\n\n{msgC}```')
+            await ctx.send(f'```List of available branches:\n\n{msgB}```')
+            await ctx.send(f'```List of available courses:\n\n{msgC}```')
 
         l = Link()
         if course in self.courses:
             if branch in l._courses[course]['branches']:
                 i = l._courses[course]['branches'].index(branch)
-                ctx.send(l._courses[course]['links'][i])
+                await ctx.send(l._courses[course]['links'][i])
 
         else:
-            ctx.send(
+            await ctx.send(
                 "Class link for this course-branch combination not found. Please register using the reglink command.")
 
 
