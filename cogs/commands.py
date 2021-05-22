@@ -439,7 +439,21 @@ class College(commands.Cog):
         Commands for college students
     '''
     branches = ['AI', 'BB', 'CH', 'CI', 'CS', 'EE', 'ME', 'MT']
-    courses = ['ph', 'cy', 'ss']
+    
+    courses = {
+        'ph': {
+            'branches': [],
+            'links': []
+        },
+        'cy': {
+            'branches': [],
+            'links': []
+        },
+        'ss': {
+            'branches': [],
+            'links': []
+        }
+    }
 
     def __init__(self, bot):
         self.bot = bot
@@ -479,9 +493,12 @@ class College(commands.Cog):
 
         try:
             if branch not in l._courses[course]['branches']:
-                l._courses[course]['branches'].append(branch)
-                l._courses[course]['links'].append(link)
+                self.courses[course]['branches'].append(branch)
+                self.courses[course]['links'].append(link)
+                l._courses = self.courses
                 l.save()
+
+                await ctx.send(f"Class link for course '{course}' and branch '{branch}' registered successfully.")
 
             else:
                 await ctx.send(
@@ -500,15 +517,16 @@ class College(commands.Cog):
             await ctx.send(f'```List of available branches:\n\n{msgB}```')
             await ctx.send(f'```List of available courses:\n\n{msgC}```')
 
-        l = Link()
-        if course in self.courses:
-            if branch in l._courses[course]['branches']:
-                i = l._courses[course]['branches'].index(branch)
-                await ctx.send(l._courses[course]['links'][i])
-
         else:
-            await ctx.send(
-                "Class link for this course-branch combination not found. Please register using the reglink command.")
+            l = Link()
+            if course in self.courses:
+                if branch in l._courses[course]['branches']:
+                    i = l._courses[course]['branches'].index(branch)
+                    await ctx.send(l._courses[course]['links'][i])
+
+            else:
+                await ctx.send(
+                    "Class link for this course-branch combination not found. Please register using the reglink command.")
 
 
 def setup(bot):
