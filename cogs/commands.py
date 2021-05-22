@@ -1,14 +1,11 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands.errors import MissingRole
-import datetime
 import random
 import time
 import aiohttp
 from db import mongo_setup
 from db.prefixes import Prefix
 from db.links import Link
-from googlesearch import search
 import googletrans
 
 mongo_setup.global_init()
@@ -88,8 +85,10 @@ class Moderation(commands.Cog):
         '''
         if amount == 0:
             await ctx.channel.purge()
+
         elif amount > 0:
             await ctx.channel.purge(limit=amount)
+
         else:
             await ctx.send("Invalid amount specified.")
 
@@ -236,15 +235,6 @@ class Settings(commands.Cog):
         '''
         await ctx.send("I was born on Christmas' Day, 2020")
 
-    @commands.command(aliases=['dt'])
-    async def datetime(self, ctx):
-        '''
-            Tells the current date and time of the server where the bot is hosted
-
-            Required arguments: None
-        '''
-        await ctx.send(datetime.datetime.now())
-
     @commands.command(aliases=['git'])
     async def github(self, ctx):
         '''
@@ -294,19 +284,19 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.command()
-    @commands.has_role('spammer')
     async def spam(self, ctx, amount=100, *, msg="This is a spam"):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
             Optional parameters: <amount> <message>
         '''
-        try:
+
+        if 'spammer' in ctx.author.roles:
             for i in range(int(amount)):
                 await ctx.send(msg)
                 time.sleep(0.2)
 
-        except MissingRole('spammer'):
+        else:
             await ctx.send("You don't have the spammer role.")
 
     @commands.command(aliases=['flip', 'coin'])
@@ -318,7 +308,7 @@ class Fun(commands.Cog):
         '''
         choices = ['Heads', 'Tails']
 
-        await ctx.send(f'{choices[random.randint(0, 1)]}')
+        await ctx.send(f'{random.choice(choices)}')
 
     @commands.command(aliases=['die'])
     async def dieroll(self, ctx):
@@ -328,16 +318,6 @@ class Fun(commands.Cog):
             Required arguments: None
         '''
         await ctx.send(f'{random.randint(1, 6)}')
-
-    @commands.command(aliases=['google'])
-    async def search(self, ctx, *, query):
-        '''
-            Makes a google search and returns the top 10 results
-
-            Required arguments: <search_query>
-        '''
-        for s in search(query, tld='co.in', lang='en', safe='off', num=10, start=0, stop=10, pause=2):
-            await ctx.send(f"{s}")
 
     @commands.command(aliases=['tr', 'trans', 'ts', 't'])
     async def translt(self, ctx, src, to, *, text):
@@ -368,6 +348,7 @@ class Fun(commands.Cog):
 
             if reply1 == "STOPPY":
                 break
+
             await ctx.send(translator.translate(text=reply1, dest=lang2, src=lang1).text)
 
             await ctx.send(f"{translator.translate('It is your turn', dest=lang2, src='en').text} {member.mention}")
@@ -376,6 +357,7 @@ class Fun(commands.Cog):
 
             if reply2 == "STOPPY":
                 break
+
             await ctx.send(translator.translate(text=reply2, dest=lang1, src=lang2).text)
 
     @commands.command(aliases=['ll'])
@@ -405,7 +387,7 @@ class Fun(commands.Cog):
         min = int(Time[1])
         sec = int(Time[2])
 
-        msg = await ctx.send(f"Time remaining: 0{hr}:0{min}:0{sec}")
+        msg = await ctx.send(f"Time remaining: 0{hr}:{min}:{sec}")
 
         while True:
             time.sleep(0.7)
@@ -419,8 +401,18 @@ class Fun(commands.Cog):
                 min = 59
                 hr -= 1
 
-            await msg.edit(content=f"Time remaining: 0{hr}:0{min}:0{sec}")
+            if sec < 10 and min < 10:
+                await msg.edit(content=f"Time remaining: 0{hr}:0{min}:0{sec}")
 
+            elif sec < 10 and min >= 10:
+                await msg.edit(content=f"Time remaining: 0{hr}:{min}:0{sec}")
+
+            elif sec >= 10 and min < 10:
+                await msg.edit(content=f"Time remaining: 0{hr}:0{min}:{sec}")
+
+            elif sec >= 10 and min >= 10:
+                await msg.edit(content=f"Time remaining: 0{hr}:{min}:{sec}")
+            
             if hr == 0 and min == 0 and sec == 0:
                 time.sleep(0.5)
                 await msg.delete()
@@ -440,17 +432,6 @@ class College(commands.Cog):
     '''
     branches = ['AI', 'BB', 'CH', 'CI', 'CS', 'EE', 'ME', 'MT']
     courses = ['ph', 'cy', 'ss']
-
-    # registered = {
-    #     'AI': [],
-    #     'BB': [],
-    #     'CH': [],
-    #     'CI': [],
-    #     'CS': [],
-    #     'EE': [],
-    #     'ME': [],
-    #     'MT': []
-    # }
 
     def __init__(self, bot):
         self.bot = bot
@@ -500,8 +481,6 @@ class College(commands.Cog):
 
                     l.save()
                     await ctx.send(f"Class link for course '{course.lower()}' and branch '{branch.upper()}' registered successfully.")
-
-                    #self.registered[branch].append(course)
 
         except Exception as e:
             await ctx.send(
