@@ -441,21 +441,21 @@ class College(commands.Cog):
     branches = ['AI', 'BB', 'CH', 'CI', 'CS', 'EE', 'ME', 'MT']
     courses = ['ph', 'cy', 'ss']
 
-    registered = {
-        'AI': [],
-        'BB': [],
-        'CH': [],
-        'CI': [],
-        'CS': [],
-        'EE': [],
-        'ME': [],
-        'MT': []
-    }
+    # registered = {
+    #     'AI': [],
+    #     'BB': [],
+    #     'CH': [],
+    #     'CI': [],
+    #     'CS': [],
+    #     'EE': [],
+    #     'ME': [],
+    #     'MT': []
+    # }
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=['rl'])
     async def reglink(self, ctx) -> Link:
         while True:
             await ctx.send(
@@ -487,22 +487,21 @@ class College(commands.Cog):
         link = link.content
 
         try:
-            l = Link()
-            l._branch = branch
+            for l in Link.objects:
+                if l._branch == branch.upper():
+                    if course.lower() == 'ph':
+                        l._ph = link
 
-            if course.lower() == 'ph':
-                l._ph = link
+                    elif course.lower() == 'cy':
+                        l._cy = link
 
-            elif course.lower() == 'cy':
-                l._cy = link
+                    elif course.lower() == 'ss':
+                        l._ss = link
 
-            elif course.lower() == 'ss':
-                l._ss = link
+                    l.save()
+                    await ctx.send(f"Class link for course '{course.lower()}' and branch '{branch.upper()}' registered successfully.")
 
-            l.save()
-            await ctx.send(f"Class link for course '{course}' and branch '{branch}' registered successfully.")
-
-            self.registered[branch].append(course)
+                    #self.registered[branch].append(course)
 
         except Exception as e:
             await ctx.send(
@@ -519,7 +518,7 @@ class College(commands.Cog):
 
         else:
             if branch.upper() in self.branches:
-                if course in self.registered[branch.upper()]:
+                if course in self.courses:
                     for link in Link.objects:
                         if link._branch == branch.upper():
                             if course.lower() == 'ph':
@@ -532,7 +531,10 @@ class College(commands.Cog):
                                 await ctx.send(link._ss)
 
                 else:
-                    await ctx.send("Class link for this course-branch combination not found. Please register using the reglink command.")
+                    await ctx.send("Course not found.")
+            
+            else:
+                await ctx.send("Branch not found.")
 
 
 def setup(bot):
