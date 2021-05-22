@@ -506,7 +506,7 @@ class College(commands.Cog):
 
         except Exception as e:
             await ctx.send(
-                "There was a database error while registering your link. Please try again after some time.")
+                f"There was a database error while registering your link. Please try again after some time.```{e}```")
 
     @commands.command(aliases=['getlink', 'classlink', 'cl', 'gl'])
     async def link(self, ctx, course='', branch='') -> Link:
