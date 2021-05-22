@@ -290,11 +290,19 @@ class Fun(commands.Cog):
 
             Optional parameters: <amount> <message>
         '''
+        role = discord.utils.find(lambda r: r.name == 'spammer', ctx.guild.roles)
 
-        if 'spammer' in ctx.author.roles:
-            for i in range(int(amount)):
-                await ctx.send(msg)
-                time.sleep(0.2)
+        if role in ctx.author.roles:
+            if amount <= 100:
+                if '@everyone' in msg:
+                    await ctx.send("You cannot spam eveyone!")
+                
+                else:
+                    for i in range(int(amount)):
+                        await ctx.send(msg)
+
+            else:
+                await ctx.send("You cannot spam more than 100 messages at a time.")
 
         else:
             await ctx.send("You don't have the spammer role.")
