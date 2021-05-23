@@ -191,6 +191,9 @@ class Settings(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.content.split()[0] == "prefix":
+            print(msg.mentions)
+            print(type(msg.mentions))
+            
             if msg.mentions[0] == self.bot.user:
                 await msg.channel.send(f"My prefix is {getprefix(msg)}")
 
@@ -454,10 +457,10 @@ class College(commands.Cog):
             await ctx.send(
                 f"Which course would you like to register for?```{', '.join(self.courses)}```")
             course = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-            course = course.content
+            course = course.content.lower()
 
-            if course.lower() in self.courses:
-                await ctx.send(f"Course '{course.lower()}' selected successfully!")
+            if course in self.courses:
+                await ctx.send(f"Course '{course}' selected successfully!")
                 break
 
             else:
@@ -466,10 +469,10 @@ class College(commands.Cog):
         while True:
             await ctx.send(f"Select your branch:```{', '.join(self.branches)}```")
             branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-            branch = branch.content
+            branch = branch.content.upper()
 
-            if branch.upper() in self.branches:
-                await ctx.send(f"Branch '{branch.upper()}' selected successfully!")
+            if branch in self.branches:
+                await ctx.send(f"Branch '{branch}' selected successfully!")
                 break
 
             else:
@@ -481,18 +484,18 @@ class College(commands.Cog):
 
         try:
             for l in Link.objects:
-                if l._branch == branch.upper():
-                    if course.lower() == 'ph':
+                if l._branch == branch:
+                    if course == 'ph':
                         l._ph = link
 
-                    elif course.lower() == 'cy':
+                    elif course == 'cy':
                         l._cy = link
 
-                    elif course.lower() == 'ss':
+                    elif course == 'ss':
                         l._ss = link
 
                     l.save()
-                    await ctx.send(f"Class link for course '{course.lower()}' and branch '{branch.upper()}' registered successfully.")
+                    await ctx.send(f"Class link for course '{course}' and branch '{branch}' registered successfully.")
 
         except Exception as e:
             await ctx.send(
@@ -500,6 +503,9 @@ class College(commands.Cog):
 
     @commands.command(aliases=['getlink', 'classlink', 'cl', 'gl'])
     async def link(self, ctx, course='', branch='') -> Link:
+        course = course.lower()
+        branch = branch.upper()
+
         if course == '' and branch == '':
             msgB = '\n'.join(self.branches)
             msgC = '\n'.join(self.courses)
@@ -508,18 +514,17 @@ class College(commands.Cog):
             await ctx.send(f'```List of available courses:\n\n{msgC}```')
 
         else:
-            if branch.upper() in self.branches:
+            if branch in self.branches:
                 if course in self.courses:
                     for link in Link.objects:
-                        if link._branch == branch.upper():
-                            if course.lower() == 'ph':
-                                await ctx.send(link._ph)
+                        if link._branch == branch:
+                            mappings = {
+                                "ph": link._ph,
+                                "cy": link._cy,
+                                "ss": link._ss
+                            }
 
-                            elif course.lower() == 'cy':
-                                await ctx.send(link._cy)
-
-                            elif course.lower() == 'ss':
-                                await ctx.send(link._ss)
+                            await ctx.send(mappings[course])
 
                 else:
                     await ctx.send("Course not found.")
