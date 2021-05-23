@@ -193,6 +193,8 @@ class Settings(commands.Cog):
         if msg.content.split()[0] == "prefix":
             print(msg.mentions)
             print(type(msg.mentions))
+            print(msg.mentions[0])
+            print(list(msg.mentions))
             
             if msg.mentions[0] == self.bot.user:
                 await msg.channel.send(f"My prefix is {getprefix(msg)}")
