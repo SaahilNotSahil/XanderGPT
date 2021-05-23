@@ -191,13 +191,6 @@ class Settings(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.content.split()[0] == "prefix":
-            print(msg.mentions)
-            print(type(msg.mentions))
-            #print(msg.mentions[0])
-            print(msg.role_mentions)
-            print(type(msg.role_mentions))
-            print(msg.mention_everyone==True)
-
             if msg.mentions[0] == self.bot.user:
                 await msg.channel.send(f"My prefix is {getprefix(msg)}")
 
@@ -291,7 +284,7 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.command()
-    async def spam(self, ctx, amount=100, *, msg="This is a spam"):
+    async def spam(self, ctx, amount: int, msg: discord.Message):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
@@ -301,16 +294,12 @@ class Fun(commands.Cog):
 
         if role in ctx.author.roles:
             if amount <= 100:
-                for r in ctx.guild.roles:
-                    if r.name == 'everyone':
-                        everyone = r
-
-                        if everyone.mention in msg:
-                            await ctx.send("You cannot spam everyone!")
-                
-                        else:
-                            for i in range(int(amount)):
-                                await ctx.send(msg)
+                if msg.mention_everyone:
+                    await ctx.send("You cannot spam everyone!")
+        
+                else:
+                    for i in range(amount):
+                        await ctx.send(msg)
 
             else:
                 await ctx.send("You cannot spam more than 100 messages at a time.")
