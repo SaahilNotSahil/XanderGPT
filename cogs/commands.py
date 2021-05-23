@@ -284,7 +284,7 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.command()
-    async def spam(self, ctx, amount: int, msg: discord.Message):
+    async def spam(self, ctx, amount: int, msg):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
@@ -299,7 +299,7 @@ class Fun(commands.Cog):
         
                 else:
                     for i in range(amount):
-                        await ctx.send(msg)
+                        await ctx.send(msg.content)
 
             else:
                 await ctx.send("You cannot spam more than 100 messages at a time.")
