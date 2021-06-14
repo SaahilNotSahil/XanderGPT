@@ -291,11 +291,10 @@ class Fun(commands.Cog):
             Optional parameters: <amount> <message>
         '''
         role = discord.utils.find(lambda r: r.name == 'spammer', ctx.guild.roles)
-        msg = discord.Message(text)
 
         if role in ctx.author.roles:
             if amount <= 100:
-                if msg.mention_everyone:
+                if '@everyone' in text:
                     await ctx.send("You cannot spam everyone!")
         
                 else:
