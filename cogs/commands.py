@@ -190,9 +190,13 @@ class Settings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.content.split()[0] == "prefix":
-            if msg.mentions[0] == self.bot.user:
-                await msg.channel.send(f"My prefix is {getprefix(msg)}")
+        try:
+            if msg.content.split()[0] == "prefix":
+                if msg.mentions[0] == self.bot.user:
+                    await msg.channel.send(f"My prefix is {getprefix(msg)}")
+        
+        except IndexError:
+            pass
 
     @commands.command()
     async def setprefix(self, ctx, *, prefix) -> Prefix:
@@ -284,7 +288,7 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.command()
-    async def spam(self, ctx, amount=100, text="This is a spam message"):
+    async def spam(self, ctx, amount=100, *, text="This is a spam message"):
         '''
             Spams the given message specified number of times. Defaults to 100 times "This is a spam"
 
