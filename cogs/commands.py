@@ -294,22 +294,22 @@ class Fun(commands.Cog):
 
             Optional parameters: <amount> <message>
         '''
-        role = discord.utils.find(lambda r: r.name == 'spammer', ctx.guild.roles)
+#         role = discord.utils.find(lambda r: r.name == 'spammer', ctx.guild.roles)
 
-        if role in ctx.author.roles:
-            if amount <= 100:
-                if '@everyone' in text:
-                    await ctx.send("You cannot spam everyone!")
+#         if role in ctx.author.roles:
+#             if amount <= 100:
+#                 if '@everyone' in text:
+#                     await ctx.send("You cannot spam everyone!")
         
-                else:
+#                 else:
                     for i in range(amount):
                         await ctx.send(text)
 
-            else:
-                await ctx.send("You cannot spam more than 100 messages at a time.")
+#             else:
+#                 await ctx.send("You cannot spam more than 100 messages at a time.")
 
-        else:
-            await ctx.send("You don't have the spammer role.")
+#         else:
+#             await ctx.send("You don't have the spammer role.")
 
     @commands.command(aliases=['flip', 'coin'])
     async def coinflip(self, ctx):
