@@ -3,15 +3,14 @@ from discord.ext import commands
 import random
 import time
 import aiohttp
-from db import mongo_setup
+from db.mongo_setup import global_init
 from db.prefixes import Prefix
-from db.links import Link
 import googletrans
 
-mongo_setup.global_init()
+global_init()
 
 
-def getprefix(msg) -> Prefix:
+def getprefix(msg):
     for pref in Prefix.objects:
         if pref._guild_id == str(msg.guild.id):
             return pref._prefix
@@ -26,7 +25,7 @@ class Greetings(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild) -> Prefix:
+    async def on_guild_join(self, guild):
         pref = Prefix()
         pref._guild_name = guild.name
         pref._guild_id = str(guild.id)
@@ -61,7 +60,7 @@ class Greetings(commands.Cog):
         await channel.send(f"{member.display_name} has left {member.guild.name}. Hope they'll come back :slight_smile:")
 
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild) -> Prefix:
+    async def on_guild_remove(self, guild):
         Prefix.objects(_guild_id=str(guild.id)).delete()
 
 
@@ -199,7 +198,7 @@ class Settings(commands.Cog):
             pass
 
     @commands.command()
-    async def setprefix(self, ctx, *, prefix) -> Prefix:
+    async def setprefix(self, ctx, *, prefix):
         '''
             Sets the specified bot prefix for the server. Also adds the prefix to the bot's nickname.
 
@@ -438,101 +437,8 @@ class Fun(commands.Cog):
                 break
 
 
-class College(commands.Cog):
-    '''
-        Commands for college students
-    '''
-    branches = ['AI', 'BB', 'CH', 'CI', 'CS', 'EE', 'ME', 'MT']
-    courses = ['ph', 'cy', 'ss']
-
-    def __init__(self, bot):
-        self.bot = bot
-
-    @commands.command(aliases=['rl'])
-    async def reglink(self, ctx) -> Link:
-        while True:
-            await ctx.send(
-                f"Which course would you like to register for?```{', '.join(self.courses)}```")
-            course = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-            course = course.content.lower()
-
-            if course in self.courses:
-                await ctx.send(f"Course '{course}' selected successfully!")
-                break
-
-            else:
-                await ctx.send("Course not found. Please select a valid course.")
-
-        while True:
-            await ctx.send(f"Select your branch:```{', '.join(self.branches)}```")
-            branch = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-            branch = branch.content.upper()
-
-            if branch in self.branches:
-                await ctx.send(f"Branch '{branch}' selected successfully!")
-                break
-
-            else:
-                await ctx.send("Branch not found. Please select a valid branch.")
-
-        await ctx.send("Input the class link to complete the registration:")
-        link = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
-        link = link.content
-
-        try:
-            for l in Link.objects:
-                if l._branch == branch:
-                    if course == 'ph':
-                        l._ph = link
-
-                    elif course == 'cy':
-                        l._cy = link
-
-                    elif course == 'ss':
-                        l._ss = link
-
-                    l.save()
-                    await ctx.send(f"Class link for course '{course}' and branch '{branch}' registered successfully.")
-
-        except Exception as e:
-            await ctx.send(
-                f"There was a database error while registering your link. Please try again after some time.```{e}```")
-
-    @commands.command(aliases=['getlink', 'classlink', 'cl', 'gl'])
-    async def link(self, ctx, course='', branch='') -> Link:
-        course = course.lower()
-        branch = branch.upper()
-
-        if course == '' and branch == '':
-            msgB = '\n'.join(self.branches)
-            msgC = '\n'.join(self.courses)
-
-            await ctx.send(f'```List of available branches:\n\n{msgB}```')
-            await ctx.send(f'```List of available courses:\n\n{msgC}```')
-
-        else:
-            if branch in self.branches:
-                if course in self.courses:
-                    for link in Link.objects:
-                        if link._branch == branch:
-                            mappings = {
-                                "ph": link._ph,
-                                "cy": link._cy,
-                                "ss": link._ss
-                            }
-
-                            await ctx.send(mappings[course])
-
-                else:
-                    await ctx.send("Course not found.")
-            
-            else:
-                await ctx.send("Branch not found.")
-
-
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Moderation(bot))
     bot.add_cog(Settings(bot))
     bot.add_cog(Fun(bot))
-    bot.add_cog(College(bot))

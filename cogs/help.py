@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
 from discord.errors import Forbidden
-from db import mongo_setup
+from db.mongo_setup import global_init
 from db.prefixes import Prefix
 
-mongo_setup.global_init()
+global_init()
 
 
 async def send_embed(ctx, embed):
@@ -23,7 +23,7 @@ async def send_embed(ctx, embed):
 # Getting the bot's prefix
 
 
-def get_prefix(ctx) -> Prefix:
+def get_prefix(ctx):
     for pref in Prefix.objects:
         if pref._guild_id == str(ctx.guild.id):
             return pref._prefix
