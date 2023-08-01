@@ -1,1 +1,1 @@
-# Xander - A Discord Bot for Fun and Moderation
+# XanderGPT - An LLM-powered Discord Bot
