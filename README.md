@@ -1,1 +1,1 @@
-# XanderGPT - An LLM-powered Discord Bot
+# XanderGPT - An LLM-powered QA Retrieval Discord Bot

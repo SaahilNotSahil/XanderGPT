@@ -1,10 +1,8 @@
 import discord
-from discord.ext import commands
 from discord.errors import Forbidden
-from db.mongo_setup import global_init
-from db.prefixes import Prefix
+from discord.ext import commands
 
-global_init()
+import db
 
 
 async def send_embed(ctx, embed):
@@ -12,7 +10,9 @@ async def send_embed(ctx, embed):
         await ctx.send(embed=embed)
     except Forbidden:
         try:
-            await ctx.send("Hey, seems like I can't send embeds. Please check my permissions :)")
+            await ctx.send(
+                "Hey, seems like I can't send embeds. Please check my permissions :)"
+            )
         except Forbidden:
             await ctx.author.send(
                 f"Hey, seems like I can't send any message in {ctx.channel.name} on {ctx.guild.name}\n"
@@ -20,32 +20,15 @@ async def send_embed(ctx, embed):
                 embed=embed
             )
 
-# Getting the bot's prefix
-
-
-def get_prefix(ctx):
-    for pref in Prefix.objects:
-        if pref._guild_id == str(ctx.guild.id):
-            return pref._prefix
-
 
 class Help(commands.Cog):
-    '''
-        Contains the help command
-    '''
-
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(aliases=['h'])
     @commands.bot_has_permissions(embed_links=True)
     async def help(self, ctx, *, query=""):
-        '''
-            Displays the help page
-
-            Optional parameters: <module_name>
-        '''
-        prefix = get_prefix(ctx)
+        prefix = db.get_prefix_from_ctx(ctx)
 
         query = query.split()
 
@@ -120,7 +103,7 @@ class Help(commands.Cog):
                 title="It's a magical place.",
                 description="I don't know how you got here. But I didn't see this coming at all.\n"
                 "Would you please be so kind to report that issue to me on github?\n"
-                "https://github.com/XanderWatson/xander-bot/issues\n"
+                "https://github.com/XanderWatson/XanderGPT/issues\n"
                 "Thank you!",
                 color=discord.Color.red()
             )
@@ -128,5 +111,5 @@ class Help(commands.Cog):
         await send_embed(ctx, emb)
 
 
-def setup(bot):
-    bot.add_cog(Help(bot))
+async def setup(bot):
+    await bot.add_cog(Help(bot))

@@ -4,14 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-discord = "*"
+"discord.py" = {extras = ["voice"], version = "*"}
 python-dotenv = "*"
 mongoengine = "*"
 pymongo = "*"
 dnspython = "*"
-googletrans = "==3.1.0a0"
+pinecone-client = "*"
+langchain = "*"
+tiktoken = "*"
+openai = "*"
+tabulate = "*"
+pypdf = "*"
+playwright = "*"
+unstructured = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
