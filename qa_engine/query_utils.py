@@ -9,14 +9,17 @@ from langchain.prompts import (ChatPromptTemplate, HumanMessagePromptTemplate,
                                SystemMessagePromptTemplate)
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 
-from utils import logger
+from utils import Cache, logger
 from vectordb import PineconeClient
 from vectordb.constants import (EMBEDDING_MODEL, OPENAI_API_KEY,
                                 PINECONE_API_KEY, PINECONE_ENV)
 
-from .constants import CHAT_MODEL
+from .constants import (CHAT_MODEL, PAST_MESSAGES_LIMIT,
+                        PAST_MESSAGES_PURGE_TOKEN_LIMIT)
 
 openai.api_key = OPENAI_API_KEY
+
+cache = Cache()
 
 
 class QAEngine:
@@ -79,24 +82,26 @@ class QAEngine:
     def _convert_docs(self, docs):
         return [SystemMessage(content=doc.page_content) for doc in docs]
 
-    def _fetch_past_messages(self, room_id):
+    def _fetch_past_messages(self, id=""):
         self.past_messages = []
 
-        # if room_id:
-        #     if cache.get(f"chatgpt_responses_{room_id}"):
-        #         previous_chats = cache.get(f"chatgpt_responses_{room_id}")
+        if id:
+            if cache.exists(f"qa_history_{id}"):
+                previous_chats = cache.get(f"qa_history_{id}")
 
-        #         if len(previous_chats) > PAST_MESSAGES_LIMIT:
-        #             previous_chats = previous_chats[2:]
+                if len(previous_chats) > PAST_MESSAGES_LIMIT:
+                    previous_chats = previous_chats[2:]
 
-        #         messages = previous_chats
+                self.past_messages = previous_chats
+                past_messages_count = len(self.past_messages)
 
-        #         logger.info(f"Previous {len(messages)} messages:\n{messages}")
+                logger.info(f"Fetched {past_messages_count} past messages.")
+                logger.info(f"Past messages: {self.past_messages}")
 
     def _get_response(
         self,
         query,
-        room_id="",
+        id="",
         docs=[],
         type="open"
     ):
@@ -129,7 +134,7 @@ class QAEngine:
             )
 
         base_prompt_message = """
-            The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.
+            You are a Question Answering Retrieval AI assistant. You are given a query, a list of documents, and a list of past messages in the conversation history. Your task is to answer the query using the documents and the past messages.
         """
 
         base_prompt = SystemMessagePromptTemplate.from_template(
@@ -137,7 +142,7 @@ class QAEngine:
         )
 
         docs_prompt_message = """
-            Use the following data as CONTEXT to this conversation:
+            Use the following documents as CONTEXT to this conversation:
         """
 
         docs_prompt = SystemMessagePromptTemplate.from_template(
@@ -216,9 +221,9 @@ class QAEngine:
 
                 return False, str(e)
 
-            # if cb.total_tokens >= PAST_MESSAGES_PURGE_TOKEN_LIMIT:
-            #     if cache.get(f"chatgpt_responses_{room_id}"):
-            #         cache.delete(f"chatgpt_responses_{room_id}")
+            if cb.total_tokens >= PAST_MESSAGES_PURGE_TOKEN_LIMIT:
+                if cache.exists(f"qa_history_{id}"):
+                    cache.delete(f"qa_history_{id}")
 
         return True, msg
 
@@ -227,14 +232,14 @@ class QAEngine:
         query,
         namespace,
         response_type="trained",
-        room_id=""
+        id=""
     ):
-        self._fetch_past_messages(room_id)
+        self._fetch_past_messages(id)
 
         if response_type == "open":
             msg_status, msg = self._get_response(
                 query=query,
-                room_id=room_id
+                id=id
             )
 
             messages = self.past_messages
@@ -243,8 +248,8 @@ class QAEngine:
             if msg_status:
                 messages.append({"role": "assistant", "content": msg})
 
-                # if room_id:
-                #     cache.set(f"chatgpt_responses_{room_id}", messages)
+                if id:
+                    cache.set(f"qa_history_{id}", messages)
         elif response_type == "trained":
             self._get_docs(
                 query=query,
@@ -253,7 +258,7 @@ class QAEngine:
 
             msg_status, msg = self._get_response(
                 query=query,
-                room_id=room_id,
+                id=id,
                 docs=self.docs,
                 type="trained"
             )
@@ -264,8 +269,8 @@ class QAEngine:
             if msg_status:
                 messages.append({"role": "assistant", "content": msg})
 
-                # if room_id:
-                #     cache.set(f"chatgpt_responses_{room_id}", messages)
+                if id:
+                    cache.set(f"qa_history_{id}", messages)
         elif response_type == "all":
             self._get_docs(
                 query=query,
@@ -274,7 +279,7 @@ class QAEngine:
 
             msg_status, msg = self._get_response(
                 query=query,
-                room_id=room_id,
+                id=id,
                 docs=self.docs,
                 type="all"
             )
@@ -285,8 +290,8 @@ class QAEngine:
             if msg_status:
                 messages.append({"role": "assistant", "content": msg})
 
-                # if room_id:
-                #     cache.set(f"chatgpt_responses_{room_id}", messages)
+                if id:
+                    cache.set(f"qa_history_{id}", messages)
         else:
             msg_status, msg = False, "Invalid response type."
 

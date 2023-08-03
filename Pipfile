@@ -17,6 +17,7 @@ tabulate = "*"
 pypdf = "*"
 playwright = "*"
 unstructured = "*"
+redis = "*"
 
 [dev-packages]
 autopep8 = "*"

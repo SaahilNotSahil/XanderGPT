@@ -1,6 +1,8 @@
 from discord.ext import commands
-
+from utils import Cache
 from qa_engine import QAEngine, add_website_data
+
+cache = Cache()
 
 
 class QA(commands.Cog):
@@ -15,7 +17,7 @@ class QA(commands.Cog):
             query,
             namespace=namespace,
             response_type="trained",
-            room_id=""
+            id="_".join([str(ctx.author.id), str(ctx.guild.id)])
         )
 
         if status:
@@ -24,6 +26,12 @@ class QA(commands.Cog):
             await ctx.send(
                 "There was an error running your query. Please try again later."
             )
+    
+    @commands.command(aliases=["ch"])
+    async def clear_history(self, ctx):
+        cache.delete(f"qa_history_{ctx.author.id}_{ctx.guild.id}")
+
+        await ctx.send("Chat history cleared successfully!")
 
 
 class Datastore(commands.Cog):
