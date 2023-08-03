@@ -234,7 +234,6 @@ class QAEngine:
         if response_type == "open":
             msg_status, msg = self._get_response(
                 query=query,
-                past_messages=self.past_messages,
                 room_id=room_id
             )
 
@@ -249,13 +248,11 @@ class QAEngine:
         elif response_type == "trained":
             self._get_docs(
                 query=query,
-                index_name=self.index_name,
                 namespace=namespace
             )
 
             msg_status, msg = self._get_response(
                 query=query,
-                past_messages=self.past_messages,
                 room_id=room_id,
                 docs=self.docs,
                 type="trained"
@@ -272,13 +269,11 @@ class QAEngine:
         elif response_type == "all":
             self._get_docs(
                 query=query,
-                index_name=self.index_name,
                 namespace=namespace
             )
 
             msg_status, msg = self._get_response(
                 query=query,
-                past_messages=self.past_messages,
                 room_id=room_id,
                 docs=self.docs,
                 type="all"
